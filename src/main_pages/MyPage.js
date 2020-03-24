@@ -1,14 +1,17 @@
 import React, { Component } from 'react'
-import Navigation from './Navigation'
-import Header from './Header'
+import Navigation from '../Navigation'
+import MainPageHeader from './components_for_pages/headers/MainPageHeader'
 
-class MainFeed extends Component {
+class MyPage extends Component {
 	render() {
 		return (
             <>
                 <Navigation></Navigation>
                 <div class="container">
-                    <Header>These are your bookmarked posts</Header>
+                    <MainPageHeader>
+                        <h1 class="display-4">This is your page, Kevin Z.</h1>
+                        <p class="lead">Create a new post, look over your post history, or edit and delete your posts</p>
+                    </MainPageHeader>
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">
                             <thead>
@@ -46,4 +49,4 @@ class MainFeed extends Component {
 	}
 }
 
-export default MainFeed
+export default MyPage

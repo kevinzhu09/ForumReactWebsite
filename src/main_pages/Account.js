@@ -1,14 +1,15 @@
-import React, { Component, useState} from 'react'
-import Navigation from './Navigation'
+import React, { Component} from 'react'
+import Navigation from '../Navigation'
 
 import Tab from 'react-bootstrap/Tab'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import ListGroup from 'react-bootstrap/ListGroup'
+import Button from 'react-bootstrap/Button'
 
 
-import './DeleteAccountModal.js';
-import DeleteAccountModal from './DeleteAccountModal.js'
+// import './DeleteAccountModal.js';
+import DeleteAccountModal from './components_for_pages/modals/DeleteAccountModal.js'
 
 
 class Account extends Component {
@@ -30,10 +31,10 @@ class Account extends Component {
             <Col md={4}>
               <ListGroup variant="pills" className="flex-column">
                 <ListGroup.Item action href="#first">
-                  Change your password
+                  Change my password
                 </ListGroup.Item>
                 <ListGroup.Item action href="#second">
-                  Delete your account
+                  Delete my account
                 </ListGroup.Item>
               </ListGroup>
             </Col>
@@ -41,7 +42,7 @@ class Account extends Component {
               <Tab.Content>
                 <Tab.Pane eventKey="#first">
                 <div class="tab-pane active" id="change-password" role="tabpanel">
-                    <h2>Change your password</h2>
+                    <h2>Change my password</h2>
 
                     <div class="form-group">
                         <label for="current-password">Current password:</label>
@@ -57,11 +58,14 @@ class Account extends Component {
                         <label for="confirm-password">Confirm new password:</label>
                         <input type="password" class="form-control" id="confirm-password" required/>
                     </div>
+                    <Button type="button" variant="primary" class="btn">Change my password</Button>
                   </div>
                 </Tab.Pane>
                 <Tab.Pane eventKey="#second">
                   
                 <div class="tab-pane" id="delete-account" role="tabpanel">
+                <h2>Delete my account</h2>
+
                     <div class="form-group">
                         <label for="verify-password">Current password:</label>
                         <input type="password" class="form-control" id="verify-password" required/>

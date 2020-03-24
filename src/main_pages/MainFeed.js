@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import Navigation from './Navigation'
-import Header from './Header'
-import './Account.css';
+import Navigation from '../Navigation'
+import MainPageHeader from './components_for_pages/headers/MainPageHeader'
 
 class MainFeed extends Component {
 	render() {
@@ -9,7 +8,13 @@ class MainFeed extends Component {
             <>
                 <Navigation></Navigation>
                 <div class="container">
-                    <Header>This is your feed, Kevin Z.</Header>
+                    <MainPageHeader>
+                        <h1 class="display-4">This is your feed, Kevin Z.</h1>
+                        <p class="lead">Create a new post, or see what people are talking about</p>
+                    </MainPageHeader>
+
+
+
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">
                             <thead>

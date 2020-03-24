@@ -2,10 +2,9 @@ import React, { Component } from 'react'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 
-import './Account.css';
 
 
-class DeleteAccountModal extends Component {
+class DeletePostModal extends Component {
 
     constructor(props) {
         super(props);
@@ -34,12 +33,11 @@ class DeleteAccountModal extends Component {
 render() {
     return (
         <>
-<Button type="button" variant="danger" class="btn btn-danger" onClick={this.open}>Delete my account</Button>
+<Button size="lg" type="button" variant="danger" class="btn btn-danger" onClick={this.open}>Delete this post</Button>
 
 <Modal show={this.state.showModal} onHide={this.close} animation={true} aria-labelledby="contained-modal-title-vcenter" centered>
 <Modal.Header closeButton>
-    {/* <Modal.Title as h5>Permanently delete your account?</Modal.Title> */}
-  <h5 id="contained-modal-title-vcenter" className="remove-margin">Permanently delete your account?</h5>
+    <Modal.Title bsPrefix='h5' id="contained-modal-title-vcenter" style={{margin:"0"}}>Permanently delete this post?</Modal.Title>
 </Modal.Header>
 <Modal.Body>This cannot be undone. Are you really sure?</Modal.Body>
 <Modal.Footer>
@@ -47,7 +45,7 @@ render() {
   No, take me back
   </Button>
   <Button variant="danger" onClick={this.close}>
-  I understand, delete my account
+  I understand, delete this post
   </Button>
 </Modal.Footer>
 </Modal>
@@ -57,4 +55,4 @@ render() {
 
 }
 }
-export default DeleteAccountModal
+export default DeletePostModal

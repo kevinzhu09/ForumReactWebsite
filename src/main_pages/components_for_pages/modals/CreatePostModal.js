@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import {Jumbotron, Button, Modal} from 'react-bootstrap'
+import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button'
 
-class Header extends Component {
+class CreatePostModal extends Component {
+
     constructor(props) {
         super(props);
       
@@ -13,6 +15,10 @@ class Header extends Component {
         this.close = this.close.bind(this);
       }
       
+    getInitialState(){
+    return { showModal: false };
+    }
+
     open() {
         this.setState({showModal: true});
     }
@@ -21,16 +27,13 @@ class Header extends Component {
         this.setState({showModal: false});
     }
 
-	render() {
-		return (
-            <>
-                <Jumbotron>
-                    <h1 class="display-4">{this.props.children}</h1>
-                    <p class="lead">Create a new post, or see what people are talking about</p>
-                    <hr class="my-4"/>
-                    <Button variant="primary" size="lg" onClick={this.open}>Create a new post</Button>
-                </Jumbotron>
-                    <Modal className="modal-container" 
+
+render() {
+    return (
+        <>
+<Button variant="primary" size="lg" onClick={this.open}>Create a new post</Button>
+
+<Modal className="modal-container" 
                         show={this.state.showModal} 
                         onHide={this.close}
                         animation={true} 
@@ -51,10 +54,10 @@ class Header extends Component {
                         <Button bsStyle="primary">Create post</Button>
                         </Modal.Footer>         
                     </Modal> 
-            </>
-          
-		);
-	}
-}
 
-export default Header
+    </>
+    );
+
+}
+}
+export default CreatePostModal
