@@ -16,7 +16,7 @@ class Account extends Component {
 	render() {
 		return (
     <>
-                <Navigation></Navigation>
+                <Navigation activeKey="/account"></Navigation>
 
 <div class="container">
   <div class="row justify-content-center">

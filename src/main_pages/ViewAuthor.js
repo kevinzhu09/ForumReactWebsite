@@ -1,20 +1,17 @@
 import React, { Component } from 'react'
 import Navigation from '../Navigation'
-import MainPageHeader from './components_for_pages/headers/MainPageHeader'
+import ViewAuthorHeader from './components_for_pages/headers/ViewAuthorHeader'
 
-class MainFeed extends Component {
+class ViewAuthor extends Component {
 	render() {
 		return (
             <>
-                <Navigation activeKey="/main-feed"></Navigation>
+                <Navigation activeKey="/authors/1" author={true}>Luis J.</Navigation>
                 <div class="container">
-                    <MainPageHeader>
-                        <h1 class="display-4">This is your feed, Kevin Z.</h1>
-                        <p class="lead">Create a new post, or see what people are talking about</p>
-                    </MainPageHeader>
-
-
-
+                    <ViewAuthorHeader>
+                        <h1 class="display-4">This is Luis J.'s page</h1>
+                        <p class="lead">Look over their posts, or like their page</p>
+                    </ViewAuthorHeader>
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">
                             <thead>
@@ -52,4 +49,4 @@ class MainFeed extends Component {
 	}
 }
 
-export default MainFeed
+export default ViewAuthor

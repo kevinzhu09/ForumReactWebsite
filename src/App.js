@@ -8,6 +8,7 @@ import Liked from './main_pages/Liked'
 import Account from './main_pages/Account'
 import Register from './pre_login_pages/register/Register'
 import ViewPost from './main_pages/ViewPost';
+import ViewAuthor from './main_pages/ViewAuthor';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path='/liked' component={Liked} exact/>
         <Route path='/account' component={Account} exact/>
         <Route path='/posts/:id' component={ViewPost} exact/>
+        <Route path='/authors/:id' component={ViewAuthor} exact/>
       </Router>     
   );
 }

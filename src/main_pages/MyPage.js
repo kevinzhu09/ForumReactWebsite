@@ -6,7 +6,7 @@ class MyPage extends Component {
 	render() {
 		return (
             <>
-                <Navigation></Navigation>
+                <Navigation activeKey="/my-page"></Navigation>
                 <div class="container">
                     <MainPageHeader>
                         <h1 class="display-4">This is your page, Kevin Z.</h1>

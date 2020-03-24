@@ -6,7 +6,7 @@ class ViewPost extends Component {
 	render() {
 		return (
             <>
-                <Navigation>This Week in Movies and Music</Navigation>
+                <Navigation activeKey="/posts/1" post={true}>This Week in Movies and Music</Navigation>
                 <div class="container">
                     <ViewPostHeader ownPost={true}>
                         <h1 class="display-4">This Week in Movies and Music</h1>

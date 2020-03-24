@@ -34,29 +34,23 @@ class LikeButton extends Component {
 render() {
     return (
         <>
-{this.state.liked ?
-
-    <>
-    <OverlayTrigger
-      key='top'
-      placement='top'
-      overlay={
-        <Tooltip id={`tooltip-$top`}>
-          Liked!
-        </Tooltip>
-      }
-    >
-      <Button size="lg" variant="success" onClick={this.unlike}>Unlike this post</Button>
-    </OverlayTrigger>{' '}
-  </>
-    :
-    <>
-        <Button size="lg" variant="outline-success" onClick={this.like}>Like this post</Button>
-    </>
-}
-    </>
-    );
-
-}
+        {this.state.liked ?
+        <>
+        <OverlayTrigger key='top' placement='top' overlay=
+        {
+            <Tooltip id={`tooltip-$liked`}>
+                Liked!
+            </Tooltip>
+        }>
+            <Button size="lg" variant="success" onClick={this.unlike}>Unlike {this.props.whatToLike}</Button>
+        </OverlayTrigger>{' '}
+        </>
+        :
+        <Button size="lg" variant="outline-success" onClick={this.like}>Like {this.props.whatToLike}</Button>
+        }
+        {' '}
+        </>
+        );
+    }
 }
 export default LikeButton

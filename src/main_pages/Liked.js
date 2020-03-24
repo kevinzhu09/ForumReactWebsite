@@ -6,7 +6,7 @@ class Liked extends Component {
 	render() {
 		return (
             <>
-                <Navigation></Navigation>
+                <Navigation activeKey="/liked"></Navigation>
                 <div class="container">
                     <MainPageHeader>
                         <h1 class="display-4">These are your liked posts and authors, Kevin Z.</h1>
