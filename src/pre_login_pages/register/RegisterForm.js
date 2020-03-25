@@ -12,25 +12,56 @@ import Button from 'react-bootstrap/Button';
 
           this.state = {
           validated: false,
-          isValid: null
+          isValid: null,
+          firstName: null,
+          lastName: null,
+          email: null,
+          username: null,
+          password: null,
+          passwordConfirmation: null,
+          agreeTerms: null
           };
 
           this.handleSubmit = this.handleSubmit.bind(this);
+          this.handleInputChange = this.handleInputChange.bind(this);
+          this.handleFormChange = this.handleFormChange.bind(this);
       }
 
       getInitialState(){
       return {
         validated: false,
-        isValid: null
-      };
+        isValid: null,
+        firstName: null,
+        lastName: null,
+        email: null,
+        username: null,
+        password: null,
+        passwordConfirmation: null,
+        agreeTerms: null,
+        registerForm: null
+        };
       }
 
+      handleFormChange(event) {
+        const form = event.currentTarget;
+        let validity = form.checkValidity();
+        this.setState({isValid:validity});
+        // alert(validity);
+      }
 
+      handleInputChange(event) {
+        const target = event.target;
+        const value = target.id === 'agreeTerms' ? target.checked : target.value;
+        const id = target.id;
+        this.setState({
+          [id]: value
+        });
+      }
 
       handleSubmit(event) { 
             const form = event.currentTarget;
-            let validity = form.checkValidity()
-            this.setState({isValid:validity})
+            let validity = form.checkValidity();
+            this.setState({isValid:validity});
             event.preventDefault();
             event.stopPropagation();
             if (validity) {
@@ -61,11 +92,14 @@ import Button from 'react-bootstrap/Button';
 render() {
     return (
         <>
-      <Form noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
+      <Form id="registerForm" className="registerForm2" onChange={this.handleFormChange} noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
         <Form.Row>
           <Form.Group as={Col} md="6" controlId="validationCustom01">
             <Form.Label>First name:</Form.Label>
             <Form.Control
+            id="firstName"
+            value={this.state.firstName}
+            onChange={this.handleInputChange}
               required
               type="text"
               placeholder="First name"
@@ -77,6 +111,9 @@ render() {
           <Form.Group as={Col} md="6" controlId="validationCustom02">
             <Form.Label>Last name:</Form.Label>
             <Form.Control
+            id="lastName"
+            value={this.state.lastName}
+            onChange={this.handleInputChange}
               required
               type="text"
               placeholder="Last name"
@@ -89,7 +126,11 @@ render() {
         <Form.Row>
           <Form.Group as={Col} md="6" controlId="validationCustom03">
             <Form.Label>Email address:</Form.Label>
-            <Form.Control type="email" placeholder="Email" required />
+            <Form.Control type="email" 
+            id="email"
+            value={this.state.email}
+            onChange={this.handleInputChange}
+            placeholder="Email" required />
 
             <Form.Control.Feedback type="invalid">
               Please provide a valid email.
@@ -106,6 +147,9 @@ render() {
                 <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
               </InputGroup.Prepend>
               <Form.Control
+                id="username"
+                value={this.state.username}
+                onChange={this.handleInputChange}
                 type="text"
                 placeholder="Username"
                 aria-describedby="inputGroupPrepend"
@@ -123,21 +167,32 @@ render() {
         <Form.Row>
             <Form.Group as={Col} md="6" controlId="validationCustom06">              
                 <Form.Label>Password:</Form.Label>
-                <Form.Control type="password" placeholder="Password" required/>
+                <Form.Control 
+                id="password"
+                value={this.state.password}
+                onChange={this.handleInputChange}
+                type="password" placeholder="Password" required/>
                 <Form.Control.Feedback type="invalid">
                 Please provide a valid password.
                 </Form.Control.Feedback>
             </Form.Group>
             <Form.Group as={Col} md="6" controlId="validationCustom07">              
                 <Form.Label>Confirm password:</Form.Label>
-                <Form.Control type="password" placeholder="Confirm password" required/>
+                <Form.Control 
+                id="passwordConfirmation"
+                value={this.state.passwordConfirmation}
+                onChange={this.handleInputChange}
+                type="password" placeholder="Confirm password" required/>
                 <Form.Control.Feedback type="invalid">
                 Please provide a valid password that matches the first.
                 </Form.Control.Feedback>
             </Form.Group>
         </Form.Row>
         <Form.Group controlId="formBasicCheckbox">
-          <Form.Check custom type='checkbox' id='AgreeTerms'
+          <Form.Check 
+          custom type='checkbox' id='agreeTerms'
+            checked={this.state.agreeTerms} 
+            onChange={this.handleInputChange}         
             required
             label="Agree to terms and conditions"
             feedback="You must agree before submitting."
@@ -147,7 +202,7 @@ render() {
         </Form.Control.Feedback>
         </Form.Group>
           <Button type="submit">Register your account</Button>
-          <p style={{color:"red", display: "inline-block", marginLeft:"10px"}}>{(!this.state.isValid && this.state.validated) && 'Some of your info was invalid, please fix it'}</p>
+          <p style={{color:"red", display: "inline-block", marginLeft:"10px"}}>{(!this.state.isValid && this.state.validated) && 'Some of your info was invalid, please fix it and resubmit'}</p>
       </Form>
         </>
     )
