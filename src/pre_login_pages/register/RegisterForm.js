@@ -1,12 +1,12 @@
-import React, { Component } from "react"
-import Form from 'react-bootstrap/Form'
-import Col from 'react-bootstrap/Col'
-import InputGroup from 'react-bootstrap/InputGroup'
-import Button from 'react-bootstrap/Button'
+import React, { Component } from "react";
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Button from 'react-bootstrap/Button';
 
 
 
-  class RegisterForm extends Component {
+  class RegisterForm extends React.Component {
       constructor(props) {
           super(props);
 
@@ -19,20 +19,42 @@ import Button from 'react-bootstrap/Button'
       }
 
       getInitialState(){
-      return { validated: false };
+      return {
+        validated: false,
+        isValid: null
+      };
       }
 
 
 
       handleSubmit(event) { 
             const form = event.currentTarget;
-            this.state.isValid = form.checkValidity() === false;
-            if (this.state.isValid) {
-              event.preventDefault();
-            
-              event.stopPropagation();
+            let validity = form.checkValidity()
+            this.setState({isValid:validity})
+            event.preventDefault();
+            event.stopPropagation();
+            if (validity) {
+              // Make the post request:
+              var myHeaders = new Headers();
+              myHeaders.append("Content-Type", "application/json");
+              myHeaders.append("Accept", "application/json");
+              
+              var raw = JSON.stringify({"first_name":"Kevin","last_name":"Zhu","email":"kevinzAS@gmail.com","username":"kevinzAS","password":"Password"});
+              
+              var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+              };
+              fetch("http://localhost:5000/register", requestOptions)
+                .then(response => response.text())
+                .then(result => {
+                  alert('result: ' + result);
+                  this.props.onSubmit();
+                })
+                .catch(error => alert('error: ' + error));
             }
-        
             this.setState({validated:true});
       }
 
@@ -125,7 +147,7 @@ render() {
         </Form.Control.Feedback>
         </Form.Group>
           <Button type="submit">Register your account</Button>
-          <p style={{color:"red", display: "inline-block", marginLeft:"10px"}}>{this.state.isValid && 'Some of your info was invalid, please fix it'}</p>
+          <p style={{color:"red", display: "inline-block", marginLeft:"10px"}}>{(!this.state.isValid && this.state.validated) && 'Some of your info was invalid, please fix it'}</p>
       </Form>
         </>
     )
