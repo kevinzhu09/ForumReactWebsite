@@ -9,12 +9,14 @@ import Account from './main_pages/Account'
 import Register from './pre_login_pages/register/Register'
 import ViewPost from './main_pages/ViewPost';
 import ViewAuthor from './main_pages/ViewAuthor';
+import Verification from './pre_login_pages/verification/Verification';
 
 function App() {
   return (
       <Router>
         <Route path='/' component={Welcome} exact/>
         <Route path='/register' component={Register} exact/>
+        <Route path='/verify' component={Verification} exact/>
         <Route path='/main-feed' component={MainFeed} exact/>
         <Route path='/my-page' component={MyPage} exact/>
         <Route path='/liked' component={Liked} exact/>
