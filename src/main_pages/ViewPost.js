@@ -4,8 +4,6 @@ import ViewPostHeader from './components_for_pages/headers/ViewPostHeader';
 import globalConstants from '../globalConstants';
 import { withRouter } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
 class ViewPost extends Component {
 
@@ -72,13 +70,12 @@ class ViewPost extends Component {
 
 	render() {          
         const authorUrl = "/authors/".concat(this.state.authorID);
-        const postPath =  this.postPath;
 		return (
             <>
-                <Navigation activeKey={postPath} post={true}>{this.state.title}</Navigation>
+                <Navigation activeKey={this.postPath} post={true}>{this.state.title}</Navigation>
                 <Container>
-                    <ViewPostHeader initialTitle={this.state.title} initialContent={this.state.content} initialLiked={this.state.initialLiked} postID={this.postID} ownPost={this.state.ownPost} postPath={postPath}>
-                        <h1 class="display-4"><a href={postPath}>{this.state.title}</a></h1>
+                    <ViewPostHeader initialTitle={this.state.title} initialContent={this.state.content} initialLiked={this.state.initialLiked} postID={this.postID} ownPost={this.state.ownPost} postPath={this.postPath}>
+                        <h1 class="display-4"><a href={this.postPath}>{this.state.title}</a></h1>
                         <p class="lead">By <a href={authorUrl}>{this.state.username}</a> | Created {this.state.createdTimestamp}</p>
                     </ViewPostHeader>
           <p>

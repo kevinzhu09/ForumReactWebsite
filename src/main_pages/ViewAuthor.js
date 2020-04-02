@@ -4,8 +4,6 @@ import ViewAuthorHeader from './components_for_pages/headers/ViewAuthorHeader';
 import globalConstants from '../globalConstants';
 import { withRouter } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
 
 class ViewAuthor extends Component {
@@ -13,15 +11,16 @@ class ViewAuthor extends Component {
     constructor(props) {
         super(props);
         // alert(JSON.stringify(this.props));
-        const url_ID = this.props.match.params.id
         this.state = { 
            posts: null,
            postsRetrieved: false,
            authorUsername: null,
-           authorID: url_ID,
-           authorPath: "/authors/".concat(url_ID),
-           noPosts: false
+           noPosts: false,
+           initialLiked: null
         };
+        this.authorID = this.props.match.params.id;
+        this.authorPath =  "/authors/".concat(this.authorID);
+
         this.renderTablePosts = this.renderTablePosts.bind(this);
      }
 
@@ -41,7 +40,7 @@ class ViewAuthor extends Component {
             redirect: 'follow'
             };
             
-            const fetchURI = this.state.authorPath
+            const fetchURI = this.authorPath
 
             fetch(globalConstants.host + fetchURI, requestOptions)
             .then(response => response.json())
@@ -55,7 +54,7 @@ class ViewAuthor extends Component {
                     const resultPosts = result.posts;
                     const resultUsername = result.authorUsername;
                     if (result.ownPage === true) {this.props.history.push('/my-page');}
-                    this.setState({posts:resultPosts, postsRetrieved:true, authorUsername:resultUsername})
+                    this.setState({posts:resultPosts, postsRetrieved:true, authorUsername:resultUsername, initialLiked: result.liked_status})
                 } else if (resultCode === 1) {
                     this.setState({noPosts:true, authorUsername:result.authorUsername})
                 } else if (resultCode === 2) {
@@ -77,7 +76,6 @@ class ViewAuthor extends Component {
         // alert(this.state.posts)
         // alert(JSON.stringify(this.state.posts))
         const authorUsername = this.state.authorUsername;
-        const authorPath = this.state.authorPath;
         // alert(JSON.stringify(this.state.posts));
         // alert(authorUsername)
         return this.state.posts.map((post, index) => {
@@ -86,7 +84,7 @@ class ViewAuthor extends Component {
             return (
                 <tr key={post_id}>
                     <th scope="row"><a href={postUrl}>{title}</a></th>
-                    <td><a href={authorPath}>{authorUsername}</a></td>
+                    <td><a href={this.authorPath}>{authorUsername}</a></td>
                     <td>{created_timestamp}</td>
                 </tr>
             )
@@ -96,9 +94,9 @@ class ViewAuthor extends Component {
 	render() {
 		return (
             <>
-                <Navigation activeKey={this.state.authorPath} author={true}>{this.state.authorUsername}</Navigation>
+                <Navigation activeKey={this.authorPath} author={true}>{this.state.authorUsername}</Navigation>
                 <Container>
-                    <ViewAuthorHeader>
+                    <ViewAuthorHeader initialLiked={this.state.initialLiked} authorID={this.authorID} authorPath={this.authorPath}>
                         <h1 class="display-4">This is {this.state.authorUsername}'s page</h1>
                         <p class="lead">Look over their posts, or like their page</p>
                     </ViewAuthorHeader>

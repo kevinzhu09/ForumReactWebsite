@@ -10,7 +10,7 @@ class ViewAuthorHeader extends Component {
                 <Jumbotron>
                     {this.props.children}
                     <hr class="my-4"/>
-                    <LikeButton liked={false} whatToLike="this author's page"/>
+                    <LikeButton initialLiked={this.props.initialLiked} authorID={this.props.authorID} whatToLike='authors'/>
                 </Jumbotron>
             </>
           

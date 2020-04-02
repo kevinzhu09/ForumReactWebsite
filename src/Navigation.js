@@ -35,10 +35,6 @@ class Navigation extends Component {
                     {this.props.post && <Nav.Link href={this.props.activeKey}>{this.props.children}</Nav.Link>}
                     {this.props.author && <Nav.Link href={this.props.activeKey}>{this.props.children}</Nav.Link>}
                 </Nav>
-                <Form inline>
-                    <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                    <Button variant="outline-success">Search</Button>
-                </Form>
                 </Navbar.Collapse>
             </Navbar>
 		);

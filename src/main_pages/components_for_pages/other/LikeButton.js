@@ -20,11 +20,10 @@ class LikeButton extends Component {
         this.unlike = this.unlike.bind(this);
         this.fetchRequest = this.fetchRequest.bind(this);
 
-        
+        this.fetchPath = null;
+        if (this.props.whatToLike==='posts') {this.fetchPath = "/posts/likes/" + this.props.postID}
+        if (this.props.whatToLike==='authors') {this.fetchPath = "/authors/likes/" + this.props.authorID}
       }
-      
-
-
 
     like() {
         this.setState({disabled: true, pressed: true});
@@ -56,7 +55,7 @@ class LikeButton extends Component {
               headers: myHeaders,
               redirect: 'follow'
             };
-            fetch(globalConstants.host + "/posts/likes/" + this.props.postID, requestOptions)
+            fetch(globalConstants.host + this.fetchPath, requestOptions)
               .then(response => response.json())
               .then(result => {
                 // next line is for debugging:
@@ -76,6 +75,10 @@ class LikeButton extends Component {
 
 
 render() {
+    let whatToLike;
+    if (this.props.whatToLike==='posts') {whatToLike = "this post"}
+    if (this.props.whatToLike==='authors') {whatToLike = "this author's page"}
+
     let liked;
     if (this.state.pressed) {
         liked = this.state.liked;
@@ -92,11 +95,11 @@ render() {
                 Liked!
             </Tooltip>
         }>
-            <Button size="lg" variant="success" onClick={this.unlike} disabled={this.state.disabled} >Unlike {this.props.whatToLike}</Button>
+            <Button size="lg" variant="success" onClick={this.unlike} disabled={this.state.disabled} >Unlike {whatToLike}</Button>
         </OverlayTrigger>{' '}
         </>
         :
-        <Button size="lg" variant="outline-success" onClick={this.like} disabled={this.state.disabled} >Like {this.props.whatToLike} </Button>
+        <Button size="lg" variant="outline-success" onClick={this.like} disabled={this.state.disabled} >Like {whatToLike} </Button>
         }
         {' '}
         </>

@@ -5,6 +5,9 @@ import globalConstants from '../globalConstants';
 import { withRouter } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Tabs from 'react-bootstrap/Tabs';
+import Tab from 'react-bootstrap/Tab';
 
 class Liked extends Component {
 
@@ -14,9 +17,13 @@ class Liked extends Component {
            posts: null,
            postsRetrieved: false,
            userUsername: null,
-           noPosts: false
+           noPosts: false,
+           authors: null,
+           authorsRetrieved: false,
+           noAuthors: false
         };
         this.renderTablePosts = this.renderTablePosts.bind(this);
+        this.renderAuthors = this.renderAuthors.bind(this);
      }
 
 
@@ -53,6 +60,37 @@ class Liked extends Component {
             }
             )
             .catch(error => alert('error: ' + error));
+        
+        // Make the second get request for authors:
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", "Bearer " + token);
+        myHeaders.append("Accept", "application/json");
+        
+        var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+        };
+
+        fetch(globalConstants.host + '/authors/likes', requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            // next line is for debugging:
+            // alert('result.message: ' + result.message);
+            const resultCode = result.code;
+
+            if (resultCode === 0) {
+                this.setState({authors:result.authors, authorsRetrieved:true})
+            } else if (resultCode === 1) {
+                this.setState({noAuthors:true})
+            } else {
+                this.props.history.push('/');
+            }
+        }
+        )
+        .catch(error => alert('error: ' + error));
+
         } else {
             this.props.history.push('/');
         }
@@ -60,7 +98,6 @@ class Liked extends Component {
     }
 
     renderTablePosts() {
-
         return this.state.posts.map((post, index) => {
             const { post_id, author_id, title, username, created_timestamp } = post; //destructuring
             const postURL = "/posts/".concat(post_id);
@@ -75,6 +112,15 @@ class Liked extends Component {
         })
     }
 
+    renderAuthors() {
+        return this.state.authors.map((author, index) => {
+            const { author_id, username } = author; //destructuring
+            const authorURL = "/authors/".concat(author_id);
+            return (
+            <ListGroup.Item><a href={authorURL}>{username}</a></ListGroup.Item>
+            )
+        })
+    }
 
 	render() {
 		return (
@@ -85,6 +131,9 @@ class Liked extends Component {
                         <h1 class="display-4">These are your liked posts and authors, {this.state.userUsername}</h1>
                         <p class="lead">Create a new post, or look over the posts and authors you liked</p>
                     </MainPageHeader>
+
+                    <Tabs defaultActiveKey="liked-posts">
+                    <Tab eventKey="liked-posts" title="Liked Posts">
                     {this.state.noPosts ?
                     <h2>You have no liked posts.</h2>
                     :
@@ -100,6 +149,17 @@ class Liked extends Component {
                             {this.state.postsRetrieved && this.renderTablePosts()}
                             </tbody>
                         </Table>}
+                    </Tab>
+                    <Tab eventKey="liked-authors" title="Liked Authors">
+                    {this.state.noAuthors ?
+                    <h2>You have no liked authors.</h2>
+                    :
+                    <ListGroup bordered hover id='authors'>
+                            {this.state.authorsRetrieved && this.renderAuthors()}
+                        </ListGroup>}
+                    </Tab>
+                    </Tabs>
+
                 </Container>
             </>
 
