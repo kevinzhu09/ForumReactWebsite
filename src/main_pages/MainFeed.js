@@ -1,22 +1,94 @@
-import React, { Component } from 'react'
-import Navigation from '../Navigation'
-import MainPageHeader from './components_for_pages/headers/MainPageHeader'
+import React, { Component } from 'react';
+import Navigation from '../Navigation';
+import MainPageHeader from './components_for_pages/headers/MainPageHeader';
+import globalConstants from '../globalConstants';
+import { withRouter } from 'react-router-dom';
+import Container from 'react-bootstrap/Container';
+import Table from 'react-bootstrap/Table';
 
 class MainFeed extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = { 
+           posts: null,
+           postsRetrieved: false,
+           userUsername: null,
+           noPosts: false
+        };
+        this.renderTablePosts = this.renderTablePosts.bind(this);
+     }
+
+    componentDidMount() {
+        const token = window.sessionStorage.token;
+        if (token) {
+// Make the get request:
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            myHeaders.append("Authorization", "Bearer " + token);
+            myHeaders.append("Accept", "application/json");
+            
+            var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
+            };
+            
+            fetch(globalConstants.host + "/posts", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                // next line is for debugging:
+                // alert('result.message: ' + result.message);
+                const resultCode = result.code;
+              
+
+                if (resultCode === 0) {
+                    this.setState({posts:result.posts, postsRetrieved:true, userUsername:result.userUsername})
+                    
+                } else if (resultCode === 1) {
+                    this.setState({noPosts:true, userUsername:result.userUsername})
+                } else {
+                    this.props.history.push('/');
+                }
+            }
+            )
+            .catch(error => alert('error: ' + error));
+        } else {
+            this.props.history.push('/');
+        }
+        // this.setState({:})
+    }
+
+    renderTablePosts() {
+        // alert('begin renderTablePosts')
+        // alert(this.state.posts)
+        return this.state.posts.map((post, index) => {
+            const { post_id, author_id, title, username, created_timestamp } = post; //destructuring
+            const postURL = "/posts/".concat(post_id);
+            const authorURL = "/authors/".concat(author_id);
+            return (
+                <tr key={post_id}>
+                    <th scope="row"><a href={postURL}>{title}</a></th>
+                    <td><a href={authorURL}>{username}</a></td>
+                    <td>{created_timestamp}</td>
+                </tr>
+            )
+        })
+    }
+  
 	render() {
 		return (
             <>
                 <Navigation activeKey="/main-feed"></Navigation>
-                <div class="container">
+                <Container>
                     <MainPageHeader>
-                        <h1 class="display-4">This is your feed, Kevin Z.</h1>
+                        <h1 class="display-4">This is your feed, {this.state.userUsername}</h1>
                         <p class="lead">Create a new post, or see what people are talking about</p>
                     </MainPageHeader>
-
-
-
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
+                    {this.state.noPosts ?
+                    <h2>There are no posts yet.</h2>
+                    :
+                        <Table bordered hover id='posts'>
                             <thead>
                             <tr>
                                 <th scope="col">Title</th>
@@ -25,25 +97,10 @@ class MainFeed extends Component {
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <th scope="row"><a href="#">This Week in Movies and Music</a></th>
-                                <td><a href="#">Luis J.</a></td>
-                                <td>February 14, 2020</td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><a href="#">The Healthiest Fruits</a></th>
-                                <td><a href="#">Harry H.</a></td>
-                                <td>July 24, 2019</td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><a href="#">How to Figure Skate</a></th>
-                                <td><a href="#">Megan B.</a></td>
-                                <td>April 5, 2019</td>
-                            </tr>
+                            {this.state.postsRetrieved && this.renderTablePosts()}
                             </tbody>
-                        </table>
-                    </div>
-                </div>
+                        </Table>}
+                </Container>
             </>
 
 
@@ -52,4 +109,4 @@ class MainFeed extends Component {
 	}
 }
 
-export default MainFeed
+export default withRouter(MainFeed);

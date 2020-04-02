@@ -1,19 +1,111 @@
-import React, { Component } from 'react'
-import Navigation from '../Navigation'
-import ViewAuthorHeader from './components_for_pages/headers/ViewAuthorHeader'
+import React, { Component } from 'react';
+import Navigation from '../Navigation';
+import ViewAuthorHeader from './components_for_pages/headers/ViewAuthorHeader';
+import globalConstants from '../globalConstants';
+import { withRouter } from 'react-router-dom';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Table from 'react-bootstrap/Table';
 
 class ViewAuthor extends Component {
+
+    constructor(props) {
+        super(props);
+        // alert(JSON.stringify(this.props));
+        const url_ID = this.props.match.params.id
+        this.state = { 
+           posts: null,
+           postsRetrieved: false,
+           authorUsername: null,
+           authorID: url_ID,
+           authorPath: "/authors/".concat(url_ID),
+           noPosts: false
+        };
+        this.renderTablePosts = this.renderTablePosts.bind(this);
+     }
+
+
+     componentDidMount() {
+        const token = window.sessionStorage.token;
+        if (token) {
+// Make the get request:
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            myHeaders.append("Authorization", "Bearer " + token);
+            myHeaders.append("Accept", "application/json");
+            
+            var requestOptions = {
+            method: 'GET',
+            headers: myHeaders,
+            redirect: 'follow'
+            };
+            
+            const fetchURI = this.state.authorPath
+
+            fetch(globalConstants.host + fetchURI, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                // next line is for debugging:
+                // alert('result.message: ' + result.message);
+                const resultCode = result.code;
+
+
+                if (resultCode === 0) {
+                    const resultPosts = result.posts;
+                    const resultUsername = result.authorUsername;
+                    if (result.ownPage === true) {this.props.history.push('/my-page');}
+                    this.setState({posts:resultPosts, postsRetrieved:true, authorUsername:resultUsername})
+                } else if (resultCode === 1) {
+                    this.setState({noPosts:true, authorUsername:result.authorUsername})
+                } else if (resultCode === 2) {
+                    // redirect to "author does not exist"?
+                } else {
+                    this.props.history.push('/');
+                }
+            }
+            )
+            .catch(error => alert('error: ' + error));
+        } else {
+            this.props.history.push('/');
+        }
+        // this.setState({:})
+    }
+
+    renderTablePosts() {
+        // alert('begin renderTablePosts')
+        // alert(this.state.posts)
+        // alert(JSON.stringify(this.state.posts))
+        const authorUsername = this.state.authorUsername;
+        const authorPath = this.state.authorPath;
+        // alert(JSON.stringify(this.state.posts));
+        // alert(authorUsername)
+        return this.state.posts.map((post, index) => {
+            const { post_id, title, created_timestamp } = post; //destructuring
+            const postUrl = "/posts/".concat(post_id);
+            return (
+                <tr key={post_id}>
+                    <th scope="row"><a href={postUrl}>{title}</a></th>
+                    <td><a href={authorPath}>{authorUsername}</a></td>
+                    <td>{created_timestamp}</td>
+                </tr>
+            )
+        })
+    }
+
 	render() {
 		return (
             <>
-                <Navigation activeKey="/authors/1" author={true}>Luis J.</Navigation>
-                <div class="container">
+                <Navigation activeKey={this.state.authorPath} author={true}>{this.state.authorUsername}</Navigation>
+                <Container>
                     <ViewAuthorHeader>
-                        <h1 class="display-4">This is Luis J.'s page</h1>
+                        <h1 class="display-4">This is {this.state.authorUsername}'s page</h1>
                         <p class="lead">Look over their posts, or like their page</p>
                     </ViewAuthorHeader>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover">
+                    {this.state.noPosts ?
+                    <h2>This author has no posts.</h2>
+                    :
+                        <Table bordered hover id='posts'>
                             <thead>
                             <tr>
                                 <th scope="col">Title</th>
@@ -22,31 +114,13 @@ class ViewAuthor extends Component {
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <th scope="row"><a href="#">This Week in Movies and Music</a></th>
-                                <td><a href="#">Luis J.</a></td>
-                                <td>February 14, 2020</td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><a href="#">The Healthiest Fruits</a></th>
-                                <td><a href="#">Harry H.</a></td>
-                                <td>July 24, 2019</td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><a href="#">How to Figure Skate</a></th>
-                                <td><a href="#">Megan B.</a></td>
-                                <td>April 5, 2019</td>
-                            </tr>
+                            {this.state.postsRetrieved && this.renderTablePosts()}
                             </tbody>
-                        </table>
-                    </div>
-                </div>
+                        </Table>}
+                </Container>
             </>
-
-
-
 		);
 	}
 }
 
-export default ViewAuthor
+export default withRouter(ViewAuthor);

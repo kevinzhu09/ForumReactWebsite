@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
-import Modal from 'react-bootstrap/Modal'
-import Button from 'react-bootstrap/Button'
-
+import React, { Component } from 'react';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import { withRouter } from 'react-router-dom';
+import globalConstants from '../../../globalConstants';
 
 
 class EditPostModal extends Component {
@@ -10,16 +11,20 @@ class EditPostModal extends Component {
         super(props);
       
         this.state = {
-          showModal: false
+          showModal: false,
+          content: null,
+          validated: false,
+          containsContent: null,
+          edited: false,
+          disabled: false
         };
       
         this.open = this.open.bind(this);
         this.close = this.close.bind(this);
-      }
 
-    getInitialState(){
-    return { showModal: false };
-    }
+        this.handleContentChange = this.handleContentChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+      }
 
     open() {
         this.setState({showModal: true});
@@ -29,22 +34,95 @@ class EditPostModal extends Component {
         this.setState({showModal: false});
     }
 
+    handleContentChange(event) {
+        const target = event.target;
+        const value = target.value;
+
+        this.setState({
+          content: value,
+          containsContent: true,
+          edited: true
+        });
+    }
+
+
+    handleSubmit(event) {
+        this.setState({disabled:true});
+        
+        const { content } = this.state;
+        const token = window.sessionStorage.token;
+        const containsContent = Boolean(content);
+        // event.preventDefault();
+        // event.stopPropagation();
+        if (containsContent) {
+          // Make the post request:
+          var myHeaders = new Headers();
+          myHeaders.append("Content-Type", "application/json");
+          myHeaders.append("Authorization", "Bearer " + token);
+          myHeaders.append("Accept", "application/json");
+          
+        
+          var raw = JSON.stringify({"content":content});
+          
+          var requestOptions = {
+            method: 'PUT',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+          };
+          
+          fetch(globalConstants.host + this.props.postPath, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+              // next line is for debugging:
+              // alert('result.message: ' + result.message);
+              const resultCode = result.code;
+
+
+              if (resultCode === 0) {
+                window.location.reload();
+                this.close();
+              } else {
+                this.props.history.push('/');
+              }
+            }
+            )
+            .catch(error => alert('error: ' + error));
+            
+        } else {
+            this.setState({containsContent:containsContent, disabled:false});
+        }
+        this.setState({validated:true});
+  }
+
+
 
 render() {
+
+    let content;
+    if (this.state.edited) {
+        content = this.state.content;
+    } else {
+        content = this.props.initialContent;
+    }
+
     return (
         <>
-<Button type="button" variant="primary" size="lg" class="btn btn-primary" onClick={this.open}>Edit this post</Button>
+<Button variant="primary" size="lg" class="btn btn-primary" onClick={this.open}>Edit this post</Button>
 
 <Modal show={this.state.showModal} onHide={this.close} animation={true} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
 <Modal.Header closeButton>
-    <Modal.Title bsPrefix='h5' id="contained-modal-title-vcenter" style={{margin:"0"}}>Editing this post:</Modal.Title>
+    <Modal.Title as="h5" id="contained-modal-title-vcenter" style={{margin:"0"}}>Editing "{this.props.initialTitle}":</Modal.Title>
 </Modal.Header>
-<Modal.Body>Sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum. Curabitur blandit tempus porttitor. Nullam quis risus eget urna mollis ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit. Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</Modal.Body>
+<Modal.Body>
+    <textarea tabIndex="1" class="form-control" value={this.state.content} onChange={this.handleContentChange} required rows="10" placeholder="Content of post:">{content}</textarea>
+</Modal.Body>
 <Modal.Footer>
+<p className={this.state.containsContent===false ? "d-block text-danger" : "d-none"}>Please provide some content.</p>
   <Button variant="secondary" onClick={this.close}>
   Cancel my editing
   </Button>
-  <Button variant="primary" onClick={this.close}>
+  <Button disabled={this.state.disabled} tabIndex="2" variant="primary" onClick={this.handleSubmit}>
   Edit this post
   </Button>
 </Modal.Footer>
@@ -55,4 +133,4 @@ render() {
 
 }
 }
-export default EditPostModal
+export default withRouter(EditPostModal);

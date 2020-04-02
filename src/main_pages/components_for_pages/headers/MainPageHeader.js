@@ -19,4 +19,4 @@ class MainPageHeader extends Component {
 	}
 }
 
-export default MainPageHeader
+export default MainPageHeader;

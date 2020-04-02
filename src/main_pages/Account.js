@@ -5,14 +5,25 @@ import Tab from 'react-bootstrap/Tab'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import ListGroup from 'react-bootstrap/ListGroup'
-import Button from 'react-bootstrap/Button'
 
 
 // import './DeleteAccountModal.js';
-import DeleteAccountModal from './components_for_pages/modals/DeleteAccountModal.js'
+import DeleteAccount from './components_for_pages/other/DeleteAccount.js'
+import ChangePassword from './components_for_pages/other/ChangePassword'
 
 
 class Account extends Component {
+  constructor(props) {
+    super(props);
+    this.handleChangePassword = this.handleChangePassword.bind(this);
+    this.state = {showChangePassword: true};
+}
+
+handleChangePassword() {
+    this.setState({showChangePassword: false})
+}
+
+
 	render() {
 		return (
     <>
@@ -42,39 +53,24 @@ class Account extends Component {
               <Tab.Content>
                 <Tab.Pane eventKey="#first">
                 <div class="tab-pane active" id="change-password" role="tabpanel">
-                    <h2>Change my password</h2>
-
-                    <div class="form-group">
-                        <label for="current-password">Current password:</label>
-                        <input type="password" class="form-control" id="current-password" required/>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="new-password">New password:</label>
-                        <input type="password" class="form-control" id="new-password" required/>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="confirm-password">Confirm new password:</label>
-                        <input type="password" class="form-control" id="confirm-password" required/>
-                    </div>
-                    <Button type="button" variant="primary" class="btn">Change my password</Button>
+               
+                    {
+                    this.state.showChangePassword
+                    ?
+                    <ChangePassword onSubmit={this.handleChangePassword}/>
+                    :
+                    <>
+                    <h2>Success!</h2>
+                    <p>You changed your password.</p>
+                    </>
+                    }
+                  
                   </div>
                 </Tab.Pane>
                 <Tab.Pane eventKey="#second">
                   
                 <div class="tab-pane" id="delete-account" role="tabpanel">
-                <h2>Delete my account</h2>
-
-                    <div class="form-group">
-                        <label for="verify-password">Current password:</label>
-                        <input type="password" class="form-control" id="verify-password" required/>
-                    </div>
-
-                  <DeleteAccountModal></DeleteAccountModal>
-
-
-
+                    <DeleteAccount/>
                   </div>
                 </Tab.Pane>
               </Tab.Content>

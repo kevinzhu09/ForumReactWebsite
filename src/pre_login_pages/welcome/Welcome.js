@@ -1,18 +1,16 @@
 import React, { Component } from 'react'
-
-import VerificationForm from './VerificationForm'
+import Button from 'react-bootstrap/Button'
+import WelcomeForm from './WelcomeForm'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-import queryString from 'query-string'
+class Welcome extends Component {
 
-
-class Verification extends React.Component {
     constructor(props) {
         super(props);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
-        this.state = {showForm: true, token: null};
+        this.state = {showForm: true};
     }
 
     handleFormSubmit() {
@@ -20,10 +18,6 @@ class Verification extends React.Component {
         // can use this function to accept props passed up from the form, and do something with them
     }
 
-    componentDidMount() {
-        const values = queryString.parse(this.props.location.search)
-        this.setState({token:values.token})
-    }
 
     render() {
         return (
@@ -32,14 +26,15 @@ class Verification extends React.Component {
                 {
                     this.state.showForm
                     ?
-                    <Col xs="12" sm="11" md="10" lg="8" xl="6">
-                    <h1>Verify your new account</h1>
-                    <VerificationForm token={this.state.token} onSubmit={this.handleFormSubmit}></VerificationForm> 
+                    <Col xs="12" sm="10" md="8" lg="6" xl="4">
+                    <h1>Sign in</h1>
+                    <a href="/Register">Or, create a new account</a>
+                    <WelcomeForm onSubmit={this.handleFormSubmit}></WelcomeForm> 
                     </Col>
                     :
                     <Col xs="12" sm="11" md="10" lg="8" xl="6">
                     <h1>Success!</h1>
-                    <p>You verified your account. You will be logged in shortly.</p>
+                    <p>You signed in. You will be taken to the forum shortly.</p>
                     </Col>
                 }
             </Row>
@@ -47,4 +42,4 @@ class Verification extends React.Component {
         );
     }
 }
-export default Verification;
+export default Welcome;

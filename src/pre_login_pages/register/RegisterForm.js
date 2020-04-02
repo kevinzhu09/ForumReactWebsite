@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 
 
 
-  class RegisterForm extends React.Component {
+  class RegisterForm extends Component {
       constructor(props) {
           super(props);
 
@@ -22,7 +22,8 @@ import Button from 'react-bootstrap/Button';
             agreeTerms: null,
             emailTaken: false,
             usernameTaken: false,
-            passwordsMatch: null
+            passwordsMatch: null,
+            disabled: false
             };
 
           this.emailRef = React.createRef();
@@ -40,22 +41,6 @@ import Button from 'react-bootstrap/Button';
           this.handlePasswordChange = this.handlePasswordChange.bind(this);
       }
 
-      getInitialState(){
-      return {
-        validated: false,
-        isValid: null,
-        firstName: null,
-        lastName: null,
-        email: null,
-        username: null,
-        password: null,
-        passwordConfirmation: null,
-        agreeTerms: null,
-        emailTaken: false,
-        usernameTaken: false,
-        passwordsMatch: null
-        };
-      }
 
       handleFormChange(event) {
         // const form = event.currentTarget;
@@ -104,6 +89,7 @@ import Button from 'react-bootstrap/Button';
       }
 
       handleSubmit(event) { 
+          this.setState({disabled:true});
             const { password, passwordConfirmation, agreeTerms } = this.state;
 
             if (!agreeTerms)  {this.setState({hasAgreed:false})}
@@ -149,6 +135,8 @@ import Button from 'react-bootstrap/Button';
 
                 })
                 .catch(error => alert('error: ' + error));
+            } else {
+              this.setState({disabled:false});
             }
             this.setState({validated:true});
       }
@@ -332,7 +320,7 @@ render() {
 
           </Form.Check>
         </Form.Group>
-          <Button type="submit">Register your account</Button>
+          <Button disabled={this.state.disabled} type="submit">Register my account</Button>
 
           <Form.Text className={(!this.state.isValid && this.state.validated) ? "visible text-danger" : "invisible"}>Some of your info was invalid, please fix it and resubmit.</Form.Text>
 
@@ -341,4 +329,4 @@ render() {
     )
 }
 }
-export default RegisterForm
+export default RegisterForm;

@@ -14,7 +14,6 @@ import Button from 'react-bootstrap/Button';
             validated: false,
             isValid: null,
             password: null,
-            correctPassword: null
             };
 
           this.passwordRef = React.createRef();
@@ -28,7 +27,6 @@ import Button from 'react-bootstrap/Button';
         validated: false,
         isValid: null,
         password: null,
-        correctPassword: null
         };
       }
 
@@ -49,7 +47,6 @@ import Button from 'react-bootstrap/Button';
         
             const { password } = this.state;
             const {token} = this.props;
-            token = String(token);
 
             const form = event.currentTarget;
             const validity = form.checkValidity();
@@ -130,4 +127,4 @@ render() {
     )
 }
 }
-export default VerificationForm
+export default VerificationForm;

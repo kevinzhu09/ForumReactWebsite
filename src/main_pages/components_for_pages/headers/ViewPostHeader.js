@@ -1,28 +1,29 @@
 import React, { Component } from 'react'
-import {Jumbotron, Button, Modal} from 'react-bootstrap'
+import { Jumbotron } from 'react-bootstrap'
 
 import EditPostModal from '../modals/EditPostModal.js'
 import DeletePostModal from '../modals/DeletePostModal.js'
 import LikeButton from '../other/LikeButton.js'
 
 class ViewPostHeader extends Component {
+
 	render() {
             return (
-            <>
+            
                 <Jumbotron>
                     {this.props.children}
                     <hr class="my-4"/>
-                    <LikeButton liked={false} whatToLike="this post"/>
+                    <LikeButton initialLiked={this.props.initialLiked} postID={this.props.postID} whatToLike="this post"/>
 
-            {this.props.ownPost && <> 
-            <EditPostModal/> <DeletePostModal/> 
-            </>}
+                    {this.props.ownPost && <> 
+                    <EditPostModal initialTitle={this.props.initialTitle} initialContent={this.props.initialContent} postPath={this.props.postPath} /> <DeletePostModal postPath={this.props.postPath}/> 
+                    </>}
 
                 </Jumbotron>
-            </>
+            
           
 		);
 	}
 }
 
-export default ViewPostHeader
+export default ViewPostHeader;
