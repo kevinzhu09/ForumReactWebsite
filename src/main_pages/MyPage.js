@@ -17,7 +17,8 @@ class MyPage extends Component {
            postsRetrieved: false,
            userUsername: null,
            authorID: null,
-           authorPath: null
+           authorPath: null,
+           noPosts: false
         };
         this.renderTablePosts = this.renderTablePosts.bind(this);
      }
@@ -48,8 +49,10 @@ class MyPage extends Component {
 
                 if (resultCode === 0) {
                     this.setState({posts:result.posts, postsRetrieved:true, userUsername:result.authorUsername, authorID: resultID, authorPath:"/authors/".concat(resultID)})
+                } else if (resultCode === 1) {
+                    this.setState({noPosts:true, userUsername:result.authorUsername})
                 } else {
-                    
+                    this.props.history.push('/');
                 }
             }
             )
@@ -84,6 +87,9 @@ class MyPage extends Component {
                         <h1 class="display-4">This is your page, {this.state.userUsername}</h1>
                         <p class="lead">Create a new post, look over your post history, or edit and delete your posts</p>
                     </MainPageHeader>
+                    {this.state.noPosts ?
+                    <h2>You have no posts yet.</h2>
+                    :
                         <Table bordered hover id='posts'>
                             <thead>
                             <tr>
@@ -95,7 +101,7 @@ class MyPage extends Component {
                             <tbody>
                             {this.state.postsRetrieved && this.renderTablePosts()}
                             </tbody>
-                        </Table>
+                        </Table>}
                 </Container>
             </>
 		);

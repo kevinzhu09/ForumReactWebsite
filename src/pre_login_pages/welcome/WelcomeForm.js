@@ -15,7 +15,6 @@ import { withRouter } from 'react-router-dom';
             isValid: null,
             email: null,
             password: null,
-            staySignedIn: null,
             loginFail: null
             };
           
@@ -126,20 +125,6 @@ render() {
                 type="password" placeholder="Password" required/>
             </Form.Group>
         </Form.Row>
-        <Form.Group controlId="formBasicCheckbox">
-          <Form.Check 
-            custom type='checkbox' id='agreeTerms'
-              checked={this.state.agreeTerms} 
-              onChange={this.handleCheckboxChange}         
-              required
-              id='staySignedIn'
-              label='Stay signed in?'
-            >
-            <Form.Check.Input checked={this.state.staySignedIn} 
-              onChange={this.handleCheckboxChange} />
-            <Form.Check.Label>Stay signed in?</Form.Check.Label>
-          </Form.Check>
-        </Form.Group>
           <Button variant="primary" type="submit">Sign in</Button>
           <Form.Text className={(this.state.loginFail && this.state.validated) ? "visible text-danger" : "invisible"}>The email or password is incorrect, please fix it and resubmit.</Form.Text>
       </Form>

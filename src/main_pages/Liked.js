@@ -117,7 +117,7 @@ class Liked extends Component {
             const { author_id, username } = author; //destructuring
             const authorURL = "/authors/".concat(author_id);
             return (
-            <ListGroup.Item><a href={authorURL}>{username}</a></ListGroup.Item>
+            <ListGroup.Item style={{backgroundColor: "transparent"}}><a href={authorURL}>{username}</a></ListGroup.Item>
             )
         })
     }
