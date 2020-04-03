@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
-
+import globalConstants from '../../globalConstants';
 
 
   class RegisterForm extends Component {
@@ -118,7 +118,7 @@ import Button from 'react-bootstrap/Button';
                 body: raw,
                 redirect: 'follow'
               };
-              fetch("http://localhost:5000/register", requestOptions)
+              fetch(globalConstants.host + "/register", requestOptions)
                 .then(response => response.json())
                 .then(result => {
                   // next line is for debugging:

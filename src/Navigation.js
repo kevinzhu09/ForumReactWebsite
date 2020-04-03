@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Navbar, Nav, Button, Form, FormControl} from 'react-bootstrap';
+import { withRouter } from 'react-router-dom';
 
 import './css/Navigation.css';
 
@@ -12,13 +13,18 @@ class Navigation extends Component {
         };
       
         this.handleClick = this.handleClick.bind(this);
-
+        this.signOut = this.signOut.bind(this);
         
       }
 
     handleClick(event) {
         event.target.disabled = true;
         this.setState({disabled:true});
+    }
+
+    signOut() {
+        window.sessionStorage.clear();
+        // this.props.history.push('/');
     }
 
 	render() {
@@ -35,10 +41,13 @@ class Navigation extends Component {
                     {this.props.post && <Nav.Link href={this.props.activeKey}>{this.props.children}</Nav.Link>}
                     {this.props.author && <Nav.Link href={this.props.activeKey}>{this.props.children}</Nav.Link>}
                 </Nav>
+                <Navbar.Text onClick={this.signOut}>
+                <Nav.Link href="/">Sign out</Nav.Link>
+                </Navbar.Text>
                 </Navbar.Collapse>
             </Navbar>
 		);
 	}
 }
 
-export default Navigation;
+export default withRouter(Navigation);

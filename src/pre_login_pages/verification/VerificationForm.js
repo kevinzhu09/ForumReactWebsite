@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
+import globalConstants from '../../globalConstants';
 
 
 
@@ -69,7 +70,7 @@ import Button from 'react-bootstrap/Button';
                 redirect: 'follow'
               };
               
-              fetch("http://localhost:5000/verify", requestOptions)
+              fetch(globalConstants.host + "/verify", requestOptions)
                 .then(response => response.json())
                 .then(result => {
                   // next line is for debugging:
@@ -84,6 +85,9 @@ import Button from 'react-bootstrap/Button';
                   // message for code4: "The verification link could have expired. You can try again, or create the account again and send another link."
                   if (resultCode === 0) {
                     this.props.onSubmit();
+                    const resultToken = result.access_token;
+                    window.sessionStorage.token = resultToken;
+                    this.props.history.push('/main-feed');
                   }
                 }
                 )
