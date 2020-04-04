@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import globalConstants from '../../globalConstants';
+import { withRouter } from 'react-router-dom';
 
 
 
@@ -131,4 +132,4 @@ render() {
     )
 }
 }
-export default VerificationForm;
+export default withRouter(VerificationForm);
