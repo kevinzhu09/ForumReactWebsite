@@ -131,10 +131,15 @@ import globalConstants from '../../globalConstants';
                   this.setState({emailTaken:emailTakenBool, usernameTaken:usernameTakenBool});
                   if (resultCode === 0) {
                     this.props.onSubmit();
+                  } else {
+                    this.setState({disabled:false});
                   }
 
                 })
-                .catch(error => alert('error: ' + error));
+                .catch(error => {
+                  this.setState({disabled:false});
+                  alert('error: ' + error);
+              });
             } else {
               this.setState({disabled:false});
             }
