@@ -5,6 +5,6 @@
 //     host: 'http://kevinzhu.me:5000'
 // };
 const APIParameters = {
-    host: 'http://kevin.microfac.com/api'
+    host: 'https://kevin.microfac.com/api'
 };
 export default APIParameters;

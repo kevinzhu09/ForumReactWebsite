@@ -24,7 +24,7 @@ class App extends React.Component {
 
 
 
-        <Route path='/' component={Welcome} exact/>
+        
         <Route path='/register' component={Register} exact/>
         <Route path='/verify' component={Verification} exact/>
         <Route path='/main-feed' component={MainFeed} exact/>
@@ -33,6 +33,7 @@ class App extends React.Component {
         <Route path='/account' component={Account} exact/>
         <Route path='/posts/:id' component={ViewPost} exact/>
         <Route path='/authors/:id' component={ViewAuthor} exact/>
+        <Route path='/' component={Welcome} />
 
   
 
