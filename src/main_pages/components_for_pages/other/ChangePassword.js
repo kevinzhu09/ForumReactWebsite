@@ -32,9 +32,9 @@ class ChangePassword extends Component {
         this.handleFormChange = this.handleFormChange.bind(this);
       }
       
-      handleFormChange() {
+    handleFormChange() {
         this.setState({isValid:true});
-      }
+    }
 
     handleCurrentChange(event) {
         const target = event.target;
@@ -84,7 +84,7 @@ class ChangePassword extends Component {
         event.preventDefault();
         event.stopPropagation();
         if (validity && match) {
-          // Make the post request:
+          // Make the put request:
           var myHeaders = new Headers();
           myHeaders.append("Content-Type", "application/json");
           myHeaders.append("Authorization", "Bearer " + token);
@@ -103,8 +103,6 @@ class ChangePassword extends Component {
           fetch(globalConstants.host + "/password", requestOptions)
             .then(response => response.json())
             .then(result => {
-              // next line is for debugging:
-              alert('result.message: ' + result.message);
               const resultCode = result.code;
               
 

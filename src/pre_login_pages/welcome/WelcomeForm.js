@@ -83,8 +83,8 @@ import { withRouter } from 'react-router-dom';
 
 
                   if (resultCode === 0) {
-                    const resultToken = result.access_token;
                     this.props.onSubmit();
+                    const resultToken = result.access_token;
                     window.sessionStorage.token = resultToken;
                     this.props.history.push('/main-feed');
                   } else {

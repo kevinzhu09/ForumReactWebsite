@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import Button from 'react-bootstrap/Button'
-import WelcomeForm from './WelcomeForm'
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
+import React, { Component } from 'react';
+import Button from 'react-bootstrap/Button';
+import WelcomeForm from './WelcomeForm';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 class Welcome extends Component {
 
@@ -28,8 +28,9 @@ class Welcome extends Component {
                     ?
                     <Col xs="12" sm="10" md="8" lg="6" xl="4">
                     <h1>Sign in</h1>
-                    <a href="/Register">Or, create a new account</a>
-                    <WelcomeForm onSubmit={this.handleFormSubmit}></WelcomeForm> 
+                    <a href="/register">Or, create a new account</a>
+                    <WelcomeForm onSubmit={this.handleFormSubmit}></WelcomeForm>
+                    <a href="/password/reset">Forgot your password? Reset your password</a>
                     </Col>
                     :
                     <Col xs="12" sm="11" md="10" lg="8" xl="6">

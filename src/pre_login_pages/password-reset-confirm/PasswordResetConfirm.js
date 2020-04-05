@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import VerificationForm from './VerificationForm';
+import PasswordResetConfirmForm from './PasswordResetConfirmForm';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -8,7 +8,7 @@ import Col from 'react-bootstrap/Col';
 import queryString from 'query-string'
 
 
-class Verification extends Component {
+class PasswordResetConfirm extends Component {
     constructor(props) {
         super(props);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -17,7 +17,6 @@ class Verification extends Component {
 
     handleFormSubmit() {
         this.setState({showForm: false});
-        // can use this function to accept props passed up from the form, and do something with them
     }
 
     componentDidMount() {
@@ -33,13 +32,13 @@ class Verification extends Component {
                     this.state.showForm
                     ?
                     <Col xs="12" sm="11" md="10" lg="8" xl="6">
-                    <h1>Verify your new account</h1>
-                    <VerificationForm token={this.state.token} onSubmit={this.handleFormSubmit}></VerificationForm> 
+                    <h1>Reset your password</h1>
+                    <PasswordResetConfirmForm token={this.state.token} onSubmit={this.handleFormSubmit}></PasswordResetConfirmForm> 
                     </Col>
                     :
                     <Col xs="12" sm="11" md="10" lg="8" xl="6">
                     <h1>Success!</h1>
-                    <p>You verified your account. You will be logged in shortly.</p>
+                    <p>You reset your password. You can now log in.</p>
                     </Col>
                 }
             </Row>
@@ -47,4 +46,4 @@ class Verification extends Component {
         );
     }
 }
-export default Verification;
+export default PasswordResetConfirm;

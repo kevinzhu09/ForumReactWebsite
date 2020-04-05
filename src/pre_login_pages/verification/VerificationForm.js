@@ -8,14 +8,14 @@ import { withRouter } from 'react-router-dom';
 
 
 
-  class VerificationForm extends React.Component {
+  class VerificationForm extends Component {
       constructor(props) {
           super(props);
 
           this.state = {
             validated: false,
             isValid: null,
-            password: null,
+            password: null
             };
 
           this.passwordRef = React.createRef();
@@ -28,20 +28,19 @@ import { withRouter } from 'react-router-dom';
       return {
         validated: false,
         isValid: null,
-        password: null,
+        password: null
         };
       }
 
 
       handlePasswordChange(event) {
-        event.target.setCustomValidity("");
         this.setState({passwordsMatch:true});
         const target = event.target;
-        const id = target.id;
+        target.setCustomValidity("");
         const value = target.value;
 
         this.setState({
-          [id]: value
+          password: value
         });
       }
 
