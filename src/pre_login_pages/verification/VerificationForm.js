@@ -15,7 +15,9 @@ import { withRouter } from 'react-router-dom';
           this.state = {
             validated: false,
             isValid: null,
-            password: null
+            password: null,
+            noID: null,
+            verifyIssue: null
             };
 
           this.passwordRef = React.createRef();
@@ -24,17 +26,9 @@ import { withRouter } from 'react-router-dom';
           this.handlePasswordChange = this.handlePasswordChange.bind(this);
       }
 
-      getInitialState(){
-      return {
-        validated: false,
-        isValid: null,
-        password: null
-        };
-      }
-
 
       handlePasswordChange(event) {
-        this.setState({passwordsMatch:true});
+        this.setState({passwordsMatch:true, noID: false,  verifyIssue: false});
         const target = event.target;
         target.setCustomValidity("");
         const value = target.value;
