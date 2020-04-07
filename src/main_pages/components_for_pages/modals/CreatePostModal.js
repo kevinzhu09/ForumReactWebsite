@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import { withRouter } from 'react-router-dom';
 import globalConstants from '../../../globalConstants';
 
@@ -92,8 +93,6 @@ class CreatePostModal extends Component {
           fetch(globalConstants.host + "/posts", requestOptions)
             .then(response => response.json())
             .then(result => {
-              // next line is for debugging:
-              // alert('result.message: ' + result.message);
               const resultCode = result.code;
 
 
@@ -107,7 +106,9 @@ class CreatePostModal extends Component {
               }
             }
             )
-            .catch(error => alert('error: ' + error));
+            .catch(error => {
+                  this.setState({disabled:false});
+              });
             
         } else {
           this.setState({disabled:false});
@@ -130,11 +131,11 @@ render() {
                         centered
                         >
                         <Modal.Header closeButton>
-                            <input tabIndex="1" minlength="1" maxlength="30" class="form-control" type="text" value={this.state.title} onChange={this.handleTitleChange} required placeholder="Title of post:"></input>
+                            <Form.Control tabIndex="1" minlength="1" maxlength="30" type="text" value={this.state.title} onChange={this.handleTitleChange} required placeholder="Title of post:"/>
                         </Modal.Header>
 
                         <Modal.Body>
-                            <textarea tabIndex="2" class="form-control" value={this.state.content} onChange={this.handleContentChange} required rows="10" placeholder="Content of post:"></textarea>
+                            <Form.Control tabIndex="2" elementType="textarea" value={this.state.content} onChange={this.handleContentChange} required rows="10" placeholder="Content of post:"/>
                         </Modal.Body>
 
                         <Modal.Footer>

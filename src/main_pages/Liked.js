@@ -45,8 +45,6 @@ class Liked extends Component {
             fetch(globalConstants.host + '/posts/likes', requestOptions)
             .then(response => response.json())
             .then(result => {
-                // next line is for debugging:
-                // alert('result.message: ' + result.message);
                 const resultCode = result.code;
 
 
@@ -59,25 +57,16 @@ class Liked extends Component {
                 }
             }
             )
-            .catch(error => alert('error: ' + error));
+            .catch(error => {
+                  
+              });
         
-        // Make the second get request for authors:
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Authorization", "Bearer " + token);
-        myHeaders.append("Accept", "application/json");
+        // Make the second get request for authors with the same header and request options:
         
-        var requestOptions = {
-        method: 'GET',
-        headers: myHeaders,
-        redirect: 'follow'
-        };
 
         fetch(globalConstants.host + '/authors/likes', requestOptions)
         .then(response => response.json())
         .then(result => {
-            // next line is for debugging:
-            // alert('result.message: ' + result.message);
             const resultCode = result.code;
 
             if (resultCode === 0) {
@@ -89,7 +78,9 @@ class Liked extends Component {
             }
         }
         )
-        .catch(error => alert('error: ' + error));
+        .catch(error => {
+                  
+              });
 
         } else {
             this.props.history.push('/');
@@ -128,8 +119,8 @@ class Liked extends Component {
                 <Navigation activeKey="/liked"></Navigation>
                 <Container>
                     <MainPageHeader>
-                        <h1 class="display-4">These are your liked posts and authors, {this.state.userUsername}</h1>
-                        <p class="lead">Create a new post, or look over the posts and authors you liked</p>
+                        <h1 className="display-4">These are your liked posts and authors, {this.state.userUsername}</h1>
+                        <p className="lead">Create a new post, or look over the posts and authors you liked</p>
                     </MainPageHeader>
 
                     <Tabs defaultActiveKey="liked-posts">

@@ -37,8 +37,6 @@ class MainFeed extends Component {
             fetch(globalConstants.host + "/posts", requestOptions)
             .then(response => response.json())
             .then(result => {
-                // next line is for debugging:
-                // alert('result.message: ' + result.message);
                 const resultCode = result.code;
               
 
@@ -52,16 +50,15 @@ class MainFeed extends Component {
                 }
             }
             )
-            .catch(error => alert('error: ' + error));
+            .catch(error => {
+                  
+              });
         } else {
             this.props.history.push('/');
         }
-        // this.setState({:})
     }
 
     renderTablePosts() {
-        // alert('begin renderTablePosts')
-        // alert(this.state.posts)
         return this.state.posts.map((post, index) => {
             const { post_id, author_id, title, username, created_timestamp } = post; //destructuring
             const postURL = "/posts/".concat(post_id);
@@ -82,8 +79,8 @@ class MainFeed extends Component {
                 <Navigation activeKey="/main-feed"></Navigation>
                 <Container>
                     <MainPageHeader>
-                        <h1 class="display-4">This is your feed, {this.state.userUsername}</h1>
-                        <p class="lead">Create a new post, or see what people are talking about</p>
+                        <h1 className="display-4">This is your feed, {this.state.userUsername}</h1>
+                        <p className="lead">Create a new post, or see what people are talking about</p>
                     </MainPageHeader>
                     {this.state.noPosts ?
                     <h2>There are no posts yet.</h2>

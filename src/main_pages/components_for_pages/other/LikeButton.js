@@ -58,8 +58,6 @@ class LikeButton extends Component {
             fetch(globalConstants.host + this.fetchPath, requestOptions)
               .then(response => response.json())
               .then(result => {
-                // next line is for debugging:
-                // alert('result.message: ' + result.message);
                 const resultCode = result.code;
   
                 if (resultCode === 0) {
@@ -70,7 +68,9 @@ class LikeButton extends Component {
               }
               )
               .catch(error => 
-                alert('error: ' + error));  
+                {
+                  this.setState({disabled:false});
+              });  
         }
 
 

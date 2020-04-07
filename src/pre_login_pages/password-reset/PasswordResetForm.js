@@ -14,7 +14,8 @@ import globalConstants from '../../globalConstants';
             validated: false,
             isValid: null,
             email: null,
-            notFound: null
+            notFound: null,
+            disabled: false
             };
 
           this.emailRef = React.createRef();
@@ -34,48 +35,49 @@ import globalConstants from '../../globalConstants';
         });
       }
 
-      handleSubmit(event) { 
-        
-            const { email } = this.state;
-
-            const form = event.currentTarget;
-            const validity = form.checkValidity();
-            this.setState({isValid:validity});
-            event.preventDefault();
-            event.stopPropagation();
-            if (validity) {
-              // Make the post request:
-              var myHeaders = new Headers();
-              myHeaders.append("Content-Type", "application/json");
-              myHeaders.append("Accept", "application/json");
-              
-              var raw = JSON.stringify({"email":email});
-              
-              var requestOptions = {
-                method: 'POST',
-                headers: myHeaders,
-                body: raw,
-                redirect: 'follow'
-              };
-              
-              fetch(globalConstants.host + "/password/reset", requestOptions)
-                .then(response => response.json())
-                .then(result => {
-                  // next line is for debugging:
-                //   alert('result.message: ' + result.message);
-                  const resultCode = result.code;
-                  if (resultCode===1) {
-                      this.emailRef.current.setCustomValidity("That email account was not found.");
-                      this.setState({notFound: true})
-                } else if (resultCode === 0) {
-                    this.props.onSubmit();
-                  }
-                }
-                )
-                .catch(error => alert('error: ' + error));
-                
+      handleSubmit(event) {
+        this.setState({disabled:true})
+        const { email } = this.state;
+        const form = event.currentTarget;
+        const validity = form.checkValidity();
+        this.setState({isValid:validity});
+        event.preventDefault();
+        event.stopPropagation();
+        if (validity) {
+          // Make the post request:
+          var myHeaders = new Headers();
+          myHeaders.append("Content-Type", "application/json");
+          myHeaders.append("Accept", "application/json");
+          
+          var raw = JSON.stringify({"email":email});
+          
+          var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+          };
+          
+          fetch(globalConstants.host + "/password/reset", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+              const resultCode = result.code;
+              if (resultCode===1) {
+                  this.emailRef.current.setCustomValidity("That email account was not found.");
+                  this.setState({notFound: true})
+            } else if (resultCode === 0) {
+                this.props.onSubmit();
+              }
             }
-            this.setState({validated:true});
+            )
+            .catch(error => {
+                  this.setState({disabled:false});
+              });
+            
+        } else {
+          this.setState({disabled:false});
+        }
+        this.setState({validated:true});
       }
 
 render() {
@@ -105,7 +107,7 @@ render() {
                 
             </Form.Group>
         </Form.Row>
-          <Button type="submit">Reset your password</Button>
+          <Button disabled={this.state.disabled} type="submit">Reset your password</Button>
       </Form>
         </>
     )

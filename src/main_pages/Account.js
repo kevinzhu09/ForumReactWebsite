@@ -1,13 +1,13 @@
-import React, { Component} from 'react'
-import Navigation from '../Navigation'
+import React, { Component} from 'react';
+import Navigation from '../Navigation';
 
-import Tab from 'react-bootstrap/Tab'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import ListGroup from 'react-bootstrap/ListGroup'
+import Tab from 'react-bootstrap/Tab';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Container from 'react-bootstrap/Container';
 
-
-// import './DeleteAccountModal.js';
 import DeleteAccount from './components_for_pages/other/DeleteAccount.js'
 import ChangePassword from './components_for_pages/other/ChangePassword'
 
@@ -29,13 +29,13 @@ handleChangePassword() {
     <>
                 <Navigation activeKey="/account"></Navigation>
 
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col">
-      <div class="jumbotron rounded">
-        <h1 class="display-4">Manage your account</h1>
-      </div>
-      {/* <div class="row"> */}
+<Container>
+  <Row className="justify-content-center">
+    <Col>
+      <Jumbotron>
+        <h1 className="display-4">Manage your account</h1>
+      </Jumbotron>
+
       
         <Tab.Container id="left-tabs-example" defaultActiveKey="#first">
           <Row>
@@ -52,7 +52,6 @@ handleChangePassword() {
             <Col md={8}>
               <Tab.Content>
                 <Tab.Pane eventKey="#first">
-                <div class="tab-pane active" id="change-password" role="tabpanel">
                
                     {
                     this.state.showChangePassword
@@ -65,22 +64,18 @@ handleChangePassword() {
                     </>
                     }
                   
-                  </div>
                 </Tab.Pane>
                 <Tab.Pane eventKey="#second">
-                  
-                <div class="tab-pane" id="delete-account" role="tabpanel">
                     <DeleteAccount/>
-                  </div>
                 </Tab.Pane>
               </Tab.Content>
             </Col>
           </Row>
         </Tab.Container>
-      </div>
-    </div>
-  </div>
-{/* </div> */}
+      </Col>
+    </Row>
+  </Container>
+
 
     </>
 

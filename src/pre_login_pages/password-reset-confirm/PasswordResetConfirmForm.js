@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
-import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import globalConstants from '../../globalConstants';
 import { withRouter } from 'react-router-dom';
@@ -91,8 +90,6 @@ import { withRouter } from 'react-router-dom';
               fetch(globalConstants.host + "/password", requestOptions)
                 .then(response => response.json())
                 .then(result => {
-                  // next line is for debugging:
-                //   alert('result.message: ' + result.message);
                   const resultCode = result.code;
                   
                   if (resultCode === 0) {
@@ -103,7 +100,9 @@ import { withRouter } from 'react-router-dom';
                   }
                 }
                 )
-                .catch(error => alert('error: ' + error));
+                .catch(error => {
+                  this.setState({disabled:false});
+              });
                 
             } else {
                 this.setState({disabled:false})

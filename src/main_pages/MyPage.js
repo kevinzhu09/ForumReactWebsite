@@ -4,8 +4,6 @@ import MainPageHeader from './components_for_pages/headers/MainPageHeader';
 import globalConstants from '../globalConstants';
 import { withRouter } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
 
 class MyPage extends Component {
@@ -42,8 +40,6 @@ class MyPage extends Component {
             fetch(globalConstants.host + '/authors/0', requestOptions)
             .then(response => response.json())
             .then(result => {
-                // next line is for debugging:
-                // alert('result.message: ' + result.message);
                 const resultCode = result.code;
                 const resultID = result.id;
 
@@ -56,7 +52,9 @@ class MyPage extends Component {
                 }
             }
             )
-            .catch(error => alert('error: ' + error));
+            .catch(error => {
+                  
+              });
         } else {
             this.props.history.push('/');
         }
@@ -84,8 +82,8 @@ class MyPage extends Component {
                 <Navigation activeKey="/my-page"></Navigation>
                 <Container>
                     <MainPageHeader>
-                        <h1 class="display-4">This is your page, {this.state.userUsername}</h1>
-                        <p class="lead">Create a new post, look over your post history, or edit and delete your posts</p>
+                        <h1 className="display-4">This is your page, {this.state.userUsername}</h1>
+                        <p className="lead">Create a new post, look over your post history, or edit and delete your posts</p>
                     </MainPageHeader>
                     {this.state.noPosts ?
                     <h2>You have no posts yet.</h2>

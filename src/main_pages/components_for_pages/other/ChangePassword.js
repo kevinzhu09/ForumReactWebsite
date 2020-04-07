@@ -119,7 +119,9 @@ class ChangePassword extends Component {
               }
             }
             )
-            .catch(error => alert('error: ' + error));
+            .catch(error => {
+                  this.setState({disabled:false});
+              });
             
         } else {
           this.setState({disabled:false});

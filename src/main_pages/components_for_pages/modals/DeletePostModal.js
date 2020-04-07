@@ -57,8 +57,6 @@ class DeletePostModal extends Component {
           fetch(globalConstants.host + this.props.postPath, requestOptions)
             .then(response => response.json())
             .then(result => {
-              // next line is for debugging:
-              // alert('result.message: ' + result.message);
               const resultCode = result.code;
 
               if (resultCode === 0) {
@@ -69,8 +67,12 @@ class DeletePostModal extends Component {
               }
             }
             )
-            .catch(error => alert('error: ' + error));
+            .catch(error => {
+                  this.setState({disabled:false});
+              });
             
+        } else {
+          this.props.history.push('/');
         }
         this.setState({validated:true});
   }
@@ -80,7 +82,7 @@ class DeletePostModal extends Component {
 render() {
     return (
         <>
-<Button size="lg" type="button" variant="danger" class="btn btn-danger" onClick={this.open}>Delete this post</Button>
+<Button size="lg" type="button" variant="danger" onClick={this.open}>Delete this post</Button>
 
 <Modal show={this.state.showModal} onHide={this.close} animation={true} aria-labelledby="contained-modal-title-vcenter" centered>
 <Modal.Header closeButton>

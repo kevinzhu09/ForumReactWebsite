@@ -15,7 +15,8 @@ import { withRouter } from 'react-router-dom';
             isValid: null,
             email: null,
             password: null,
-            loginFail: null
+            loginFail: null,
+            disabled: false
             };
           
           this.handleSubmit = this.handleSubmit.bind(this);
@@ -49,53 +50,56 @@ import { withRouter } from 'react-router-dom';
         });
       }
 
-      handleSubmit(event) { 
+      handleSubmit(event) {
+        this.setState({disabled:true});
         
-            const { email, password } = this.state;
+        const { email, password } = this.state;
 
-            const form = event.currentTarget;
-            const validity = form.checkValidity();
-            this.setState({isValid:validity});
-            event.preventDefault();
-            event.stopPropagation();
-            if (validity) {
-              // Make the post request:
-              var myHeaders = new Headers();
-              myHeaders.append("Content-Type", "application/json");
-              myHeaders.append("Accept", "application/json");
-              
-            
-              var raw = JSON.stringify({"email":email,"password":password});
-              
-              var requestOptions = {
-                method: 'POST',
-                headers: myHeaders,
-                body: raw,
-                redirect: 'follow'
-              };
-              
-              fetch(globalConstants.host + "/login", requestOptions)
-                .then(response => response.json())
-                .then(result => {
-                  // next line is for debugging:
-                  // alert('result.message: ' + result.message);
-                  const resultCode = result.code;
+        const form = event.currentTarget;
+        const validity = form.checkValidity();
+        this.setState({isValid:validity});
+        event.preventDefault();
+        event.stopPropagation();
+        if (validity) {
+          // Make the post request:
+          var myHeaders = new Headers();
+          myHeaders.append("Content-Type", "application/json");
+          myHeaders.append("Accept", "application/json");
+          
+        
+          var raw = JSON.stringify({"email":email,"password":password});
+          
+          var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+          };
+          
+          fetch(globalConstants.host + "/login", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+              const resultCode = result.code;
 
 
-                  if (resultCode === 0) {
-                    this.props.onSubmit();
-                    const resultToken = result.access_token;
-                    window.sessionStorage.token = resultToken;
-                    this.props.history.push('/main-feed');
-                  } else {
-                      this.setState({loginFail:true})
-                  }
-                }
-                )
-                .catch(error => alert('error: ' + error));
-                
+              if (resultCode === 0) {
+                this.props.onSubmit();
+                const resultToken = result.access_token;
+                window.sessionStorage.token = resultToken;
+                this.props.history.push('/main-feed');
+              } else {
+                  this.setState({loginFail:true, disabled:false})
+              }
             }
-            this.setState({validated:true});
+            )
+            .catch(error => {
+                  this.setState({disabled:false});
+              });
+            
+        } else {
+          this.setState({disabled:false});
+        }
+        this.setState({validated:true});
       }
 
 render() {
@@ -125,7 +129,7 @@ render() {
                 type="password" placeholder="Password" required/>
             </Form.Group>
         </Form.Row>
-          <Button variant="primary" type="submit">Sign in</Button>
+          <Button disabled={this.state.disabled} variant="primary" type="submit">Sign in</Button>
           <Form.Text className={(this.state.loginFail && this.state.validated) ? "visible text-danger" : "invisible"}>The email or password is incorrect, please fix it and resubmit.</Form.Text>
       </Form>
         </>

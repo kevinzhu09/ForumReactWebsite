@@ -121,8 +121,6 @@ import globalConstants from '../../globalConstants';
               fetch(globalConstants.host + "/register", requestOptions)
                 .then(response => response.json())
                 .then(result => {
-                  // next line is for debugging:
-                  // alert('result.message: ' + result.message);
                   const resultCode = result.code;
                   const emailTakenBool = Boolean(resultCode & 1)
                   if (emailTakenBool) {this.emailRef.current.setCustomValidity("That email is taken.");}
@@ -138,7 +136,6 @@ import globalConstants from '../../globalConstants';
                 })
                 .catch(error => {
                   this.setState({disabled:false});
-                  alert('error: ' + error);
               });
             } else {
               this.setState({disabled:false});

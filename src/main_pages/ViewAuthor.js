@@ -10,7 +10,6 @@ class ViewAuthor extends Component {
 
     constructor(props) {
         super(props);
-        // alert(JSON.stringify(this.props));
         this.state = { 
            posts: null,
            postsRetrieved: false,
@@ -45,8 +44,6 @@ class ViewAuthor extends Component {
             fetch(globalConstants.host + fetchURI, requestOptions)
             .then(response => response.json())
             .then(result => {
-                // next line is for debugging:
-                // alert('result.message: ' + result.message);
                 const resultCode = result.code;
 
 
@@ -64,20 +61,16 @@ class ViewAuthor extends Component {
                 }
             }
             )
-            .catch(error => alert('error: ' + error));
+            .catch(error => {
+                  
+              });
         } else {
             this.props.history.push('/');
         }
-        // this.setState({:})
     }
 
     renderTablePosts() {
-        // alert('begin renderTablePosts')
-        // alert(this.state.posts)
-        // alert(JSON.stringify(this.state.posts))
         const authorUsername = this.state.authorUsername;
-        // alert(JSON.stringify(this.state.posts));
-        // alert(authorUsername)
         return this.state.posts.map((post, index) => {
             const { post_id, title, created_timestamp } = post; //destructuring
             const postUrl = "/posts/".concat(post_id);
@@ -97,8 +90,8 @@ class ViewAuthor extends Component {
                 <Navigation activeKey={this.authorPath} author={true}>{this.state.authorUsername}</Navigation>
                 <Container>
                     <ViewAuthorHeader initialLiked={this.state.initialLiked} authorID={this.authorID} authorPath={this.authorPath}>
-                        <h1 class="display-4">This is {this.state.authorUsername}'s page</h1>
-                        <p class="lead">Look over their posts, or like their page</p>
+                        <h1 className="display-4">This is {this.state.authorUsername}'s page</h1>
+                        <p className="lead">Look over their posts, or like their page</p>
                     </ViewAuthorHeader>
                     {this.state.noPosts ?
                     <h2>This author has no posts.</h2>

@@ -12,7 +12,7 @@ class ViewPostHeader extends Component {
             
                 <Jumbotron>
                     {this.props.children}
-                    <hr class="my-4"/>
+                    <hr className="my-4"/>
                     <LikeButton initialLiked={this.props.initialLiked} postID={this.props.postID} whatToLike='posts'/>
 
                     {this.props.ownPost && <> 

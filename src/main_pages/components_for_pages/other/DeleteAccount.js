@@ -82,8 +82,6 @@ class DeleteAccount extends Component {
           fetch(globalConstants.host + "/users", requestOptions)
             .then(response => response.json())
             .then(result => {
-              // next line is for debugging:
-            //   alert('result.message: ' + result.message);
               const resultCode = result.code;
               
 
@@ -98,7 +96,9 @@ class DeleteAccount extends Component {
               }
             }
             )
-            .catch(error => alert('error: ' + error));
+            .catch(error => {
+                  this.setState({disabled:false});
+              });
             
         } else {
           this.setState({disabled:false});
@@ -132,7 +132,7 @@ render() {
              
 </Form.Group>
 
-<Button variant="danger" class="btn btn-danger" onClick={this.open}>Delete my account</Button>
+<Button variant="danger" onClick={this.open}>Delete my account</Button>
 
 <Modal show={this.state.showModal} onHide={this.close} animation={true} aria-labelledby="contained-modal-title-vcenter" centered>
 <Modal.Header closeButton>

@@ -27,6 +27,7 @@ class Register extends Component {
                     ?
                     <Col xs="12" sm="11" md="11" lg="10" xl="10">
                     <h1>Register a new account</h1>
+                    <a href="/">Or, login if you have an account</a>
                     <RegisterForm onSubmit={this.handleFormSubmit}></RegisterForm> 
                     </Col>
                     :

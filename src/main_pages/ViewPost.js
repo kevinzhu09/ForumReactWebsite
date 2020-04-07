@@ -45,8 +45,6 @@ class ViewPost extends Component {
             fetch(globalConstants.host + fetchURI, requestOptions)
             .then(response => response.json())
             .then(result => {
-                // next line is for debugging:
-                // alert('result.message: ' + result.message);
                 const resultCode = result.code;
 
 
@@ -61,7 +59,9 @@ class ViewPost extends Component {
                 }
             }
             )
-            .catch(error => alert('error: ' + error));
+            .catch(error => {
+                  
+              });
         } else {
             this.props.history.push('/');
         }
@@ -75,8 +75,8 @@ class ViewPost extends Component {
                 <Navigation activeKey={this.postPath} post={true}>{this.state.title}</Navigation>
                 <Container>
                     <ViewPostHeader initialTitle={this.state.title} initialContent={this.state.content} initialLiked={this.state.initialLiked} postID={this.postID} ownPost={this.state.ownPost} postPath={this.postPath}>
-                        <h1 class="display-4"><a href={this.postPath}>{this.state.title}</a></h1>
-                        <p class="lead">By <a href={authorUrl}>{this.state.username}</a> | Created {this.state.createdTimestamp}</p>
+                        <h1 className="display-4"><a href={this.postPath}>{this.state.title}</a></h1>
+                        <p className="lead">By <a href={authorUrl}>{this.state.username}</a> | Created {this.state.createdTimestamp}</p>
                     </ViewPostHeader>
           <p>
               {this.state.content}

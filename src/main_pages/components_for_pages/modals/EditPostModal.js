@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import { withRouter } from 'react-router-dom';
 import globalConstants from '../../../globalConstants';
 
@@ -74,8 +75,6 @@ class EditPostModal extends Component {
           fetch(globalConstants.host + this.props.postPath, requestOptions)
             .then(response => response.json())
             .then(result => {
-              // next line is for debugging:
-              // alert('result.message: ' + result.message);
               const resultCode = result.code;
 
 
@@ -87,10 +86,12 @@ class EditPostModal extends Component {
               }
             }
             )
-            .catch(error => alert('error: ' + error));
+            .catch(error => {
+                  this.setState({disabled:false});
+              });
             
         } else {
-            this.setState({containsContent:containsContent, disabled:false});
+            this.setState({containsContent:false, disabled:false});
         }
         this.setState({validated:true});
   }
@@ -108,14 +109,14 @@ render() {
 
     return (
         <>
-<Button variant="primary" size="lg" class="btn btn-primary" onClick={this.open}>Edit this post</Button>
+<Button variant="primary" size="lg" onClick={this.open}>Edit this post</Button>
 
 <Modal show={this.state.showModal} onHide={this.close} animation={true} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
 <Modal.Header closeButton>
     <Modal.Title as="h5" id="contained-modal-title-vcenter" style={{margin:"0"}}>Editing "{this.props.initialTitle}":</Modal.Title>
 </Modal.Header>
 <Modal.Body>
-    <textarea tabIndex="1" class="form-control" value={this.state.content} onChange={this.handleContentChange} required rows="10" placeholder="Content of post:">{content}</textarea>
+    <Form.Control tabIndex="1" elementType="textarea" value={this.state.content} onChange={this.handleContentChange} required rows="10" placeholder="Content of post:">{content}</Form.Control>
 </Modal.Body>
 <Modal.Footer>
 <p className={this.state.containsContent===false ? "d-block text-danger" : "d-none"}>Please provide some content.</p>

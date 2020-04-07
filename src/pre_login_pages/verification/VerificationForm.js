@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
-import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import globalConstants from '../../globalConstants';
 import { withRouter } from 'react-router-dom';
@@ -17,7 +16,8 @@ import { withRouter } from 'react-router-dom';
             isValid: null,
             password: null,
             noID: null,
-            verifyIssue: null
+            verifyIssue: null,
+            disabled: false
             };
 
           this.passwordRef = React.createRef();
@@ -39,56 +39,59 @@ import { withRouter } from 'react-router-dom';
       }
 
       handleSubmit(event) { 
+        this.setState({disabled:true});
         
-            const { password } = this.state;
-            const {token} = this.props;
+        const { password } = this.state;
+        const {token} = this.props;
 
-            const form = event.currentTarget;
-            const validity = form.checkValidity();
-            this.setState({isValid:validity});
-            event.preventDefault();
-            event.stopPropagation();
-            if (validity) {
-              // Make the put request:
-              var myHeaders = new Headers();
-              myHeaders.append("Content-Type", "application/json");
-              myHeaders.append("Authorization", "Bearer " + token);
-              myHeaders.append("Accept", "application/json");
-              
-              var raw = JSON.stringify({"password":password});
-              
-              var requestOptions = {
-                method: 'PUT',
-                headers: myHeaders,
-                body: raw,
-                redirect: 'follow'
-              };
-              
-              fetch(globalConstants.host + "/verify", requestOptions)
-                .then(response => response.json())
-                .then(result => {
-                  // next line is for debugging:
-                  alert('result.message: ' + result.message);
-                  const resultCode = result.code;
-                  const verifyIssueBool = Boolean(resultCode & 1)
-                  if (verifyIssueBool) {this.passwordRef.current.setCustomValidity("There was a problem with verifying your account. The account could already be verified, or some other issue.");}
-                  const noIDBool = Boolean(resultCode & 2)
-                  if (noIDBool) {this.passwordRef.current.setCustomValidity("The password is not correct.");}
-                  this.setState({verifyIssue:verifyIssueBool, noID:noIDBool});
+        const form = event.currentTarget;
+        const validity = form.checkValidity();
+        this.setState({isValid:validity});
+        event.preventDefault();
+        event.stopPropagation();
+        if (validity) {
+          // Make the put request:
+          var myHeaders = new Headers();
+          myHeaders.append("Content-Type", "application/json");
+          myHeaders.append("Authorization", "Bearer " + token);
+          myHeaders.append("Accept", "application/json");
+          
+          var raw = JSON.stringify({"password":password});
+          
+          var requestOptions = {
+            method: 'PUT',
+            headers: myHeaders,
+            body: raw,
+            redirect: 'follow'
+          };
+          
+          fetch(globalConstants.host + "/verify", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+              const resultCode = result.code;
+              const verifyIssueBool = Boolean(resultCode & 1)
+              if (verifyIssueBool) {this.passwordRef.current.setCustomValidity("There was a problem with verifying your account. The account could already be verified, or some other issue.");}
+              const noIDBool = Boolean(resultCode & 2)
+              if (noIDBool) {this.passwordRef.current.setCustomValidity("The password is not correct.");}
+              this.setState({verifyIssue:verifyIssueBool, noID:noIDBool});
 
-                  // message for code4: "The verification link could have expired. You can try again, or create the account again and send another link."
-                  if (resultCode === 0) {
-                    this.props.onSubmit();
-                    const resultToken = result.access_token;
-                    window.sessionStorage.token = resultToken;
-                    this.props.history.push('/main-feed');
-                  }
-                }
-                )
-                .catch(error => alert('error: ' + error));
-                
+              // message for code4: "The verification link could have expired. You can try again, or create the account again and send another link."
+              if (resultCode === 0) {
+                this.props.onSubmit();
+                const resultToken = result.access_token;
+                window.sessionStorage.token = resultToken;
+                this.props.history.push('/main-feed');
+              }
             }
-            this.setState({validated:true});
+            )
+            .catch(error => {
+                  this.setState({disabled:false});
+              });
+            
+        } else {
+          this.setState({disabled:false});
+        }
+        this.setState({validated:true});
       }
 
 render() {
@@ -119,7 +122,7 @@ render() {
                 }
             </Form.Group>
         </Form.Row>
-          <Button type="submit">Verify your account</Button>
+          <Button disabled={this.state.disabled} type="submit">Verify your account</Button>
       </Form>
         </>
     )
