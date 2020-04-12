@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import Button from 'react-bootstrap/Button'
-import Tooltip from 'react-bootstrap/Tooltip'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
-import globalConstants from '../../../globalConstants';
+import React, { Component } from 'react';
+import Button from 'react-bootstrap/Button';
+import Tooltip from 'react-bootstrap/Tooltip';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import { host } from '../../../globalConstants';
 import { withRouter } from 'react-router-dom';
 
 
@@ -55,7 +55,7 @@ class LikeButton extends Component {
               headers: myHeaders,
               redirect: 'follow'
             };
-            fetch(globalConstants.host + this.fetchPath, requestOptions)
+            fetch(host + this.fetchPath, requestOptions)
               .then(response => response.json())
               .then(result => {
                 const resultCode = result.code;
@@ -63,7 +63,7 @@ class LikeButton extends Component {
                 if (resultCode === 0) {
                     this.setState({liked: isLikeRequest, disabled: false});
                 } else {
-                    this.props.history.push('/');
+                    this.props.history.push('/sign-in');
                 }
               }
               )
@@ -99,7 +99,7 @@ render() {
         </OverlayTrigger>{' '}
         </>
         :
-        <Button size="lg" variant="outline-success" onClick={this.like} disabled={this.state.disabled} >Like {whatToLike} </Button>
+        <Button size="lg" variant="outline-success" onClick={this.like} disabled={this.state.disabled} >Like {whatToLike}</Button>
         }
         {' '}
         </>

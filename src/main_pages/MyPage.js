@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Navigation from '../Navigation';
 import MainPageHeader from './components_for_pages/headers/MainPageHeader';
-import globalConstants from '../globalConstants';
+import { host } from '../globalConstants';
 import { withRouter } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
@@ -37,18 +37,21 @@ class MyPage extends Component {
             redirect: 'follow'
             };
 
-            fetch(globalConstants.host + '/authors/0', requestOptions)
+            fetch(host + '/authors/0', requestOptions)
             .then(response => response.json())
             .then(result => {
                 const resultCode = result.code;
                 const resultID = result.id;
-
-                if (resultCode === 0) {
+                const userUsername = result.userUsername;
+                const authorUsername = result.authorUsername;
+                if (!userUsername===authorUsername) {
+                    this.props.history.push('sign-in');
+                } else if (resultCode === 0) {
                     this.setState({posts:result.posts, postsRetrieved:true, userUsername:result.authorUsername, authorID: resultID, authorPath:"/authors/".concat(resultID)})
                 } else if (resultCode === 1) {
                     this.setState({noPosts:true, userUsername:result.authorUsername})
                 } else {
-                    this.props.history.push('/');
+                    this.props.history.push('sign-in');
                 }
             }
             )
@@ -56,7 +59,7 @@ class MyPage extends Component {
                   
               });
         } else {
-            this.props.history.push('/');
+            this.props.history.push('sign-in');
         }
     }
 
@@ -79,11 +82,15 @@ class MyPage extends Component {
 	render() {
 		return (
             <>
-                <Navigation activeKey="/my-page"></Navigation>
+                <Navigation guest={false} userUsername={this.state.userUsername} activeKey="/my-page"></Navigation>
                 <Container>
                     <MainPageHeader>
+                    {Boolean(this.state.userUsername) &&
+                        <>
                         <h1 className="display-4">This is your page, {this.state.userUsername}</h1>
                         <p className="lead">Create a new post, look over your post history, or edit and delete your posts</p>
+                        </>
+                        }
                     </MainPageHeader>
                     {this.state.noPosts ?
                     <h2>You have no posts yet.</h2>

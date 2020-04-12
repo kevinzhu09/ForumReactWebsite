@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import { withRouter } from 'react-router-dom';
-import globalConstants from '../../../globalConstants';
+import { host } from '../../../globalConstants';
 import { Form } from 'react-bootstrap';
 import Col from 'react-bootstrap/Col';
 
@@ -11,9 +11,9 @@ class ChangePassword extends Component {
         super(props);
       
         this.state = {
-          currentPassword: null,
-          newPassword: null,
-          confirmPassword: null,
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: "",
           validated: false,
           isValid: null,
           passwordsMatch: null,
@@ -100,7 +100,7 @@ class ChangePassword extends Component {
             redirect: 'follow'
           };
           
-          fetch(globalConstants.host + "/password", requestOptions)
+          fetch(host + "/password", requestOptions)
             .then(response => response.json())
             .then(result => {
               const resultCode = result.code;
@@ -115,7 +115,7 @@ class ChangePassword extends Component {
                 this.currentRef.current.setCustomValidity("The current password was not correct.");
                 this.setState({wrongPassword:true});
               } else if (resultCode === 4) {
-                this.props.history.push('/');
+                this.props.history.push('sign-in');
               }
             }
             )

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import { withRouter } from 'react-router-dom';
-import globalConstants from '../../../globalConstants';
+import { host } from '../../../globalConstants';
 import { Form } from 'react-bootstrap';
 import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
@@ -12,7 +12,7 @@ class DeleteAccount extends Component {
         super(props);
       
         this.state = {
-          currentPassword: null,
+          currentPassword: "",
           noPassword: null,
           wrongPassword: null,
           showModal: false,
@@ -79,20 +79,20 @@ class DeleteAccount extends Component {
             redirect: 'follow'
           };
           
-          fetch(globalConstants.host + "/users", requestOptions)
+          fetch(host + "/users", requestOptions)
             .then(response => response.json())
             .then(result => {
               const resultCode = result.code;
               
 
               if (resultCode === 0) {
-                this.props.history.push('/');
+                this.props.history.push('sign-in');
               } else if (resultCode === 1) {
                 this.setState({wrongPassword:true, disabled:false});
                 this.currentRef.current.setCustomValidity("The current password was not correct.")
                 this.close();
               } else {
-                this.props.history.push('/');
+                this.props.history.push('sign-in');
               }
             }
             )

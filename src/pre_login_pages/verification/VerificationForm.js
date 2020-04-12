@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import globalConstants from '../../globalConstants';
+import { host } from '../../globalConstants';
 import { withRouter } from 'react-router-dom';
 
 
@@ -14,7 +14,7 @@ import { withRouter } from 'react-router-dom';
           this.state = {
             validated: false,
             isValid: null,
-            password: null,
+            password: "",
             noID: null,
             verifyIssue: null,
             disabled: false
@@ -65,7 +65,7 @@ import { withRouter } from 'react-router-dom';
             redirect: 'follow'
           };
           
-          fetch(globalConstants.host + "/verify", requestOptions)
+          fetch(host + "/verify", requestOptions)
             .then(response => response.json())
             .then(result => {
               const resultCode = result.code;

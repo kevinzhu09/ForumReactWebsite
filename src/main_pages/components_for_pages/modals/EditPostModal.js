@@ -3,7 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { withRouter } from 'react-router-dom';
-import globalConstants from '../../../globalConstants';
+import { host } from '../../../globalConstants';
 
 
 class EditPostModal extends Component {
@@ -13,7 +13,7 @@ class EditPostModal extends Component {
       
         this.state = {
           showModal: false,
-          content: null,
+          content: "",
           validated: false,
           containsContent: null,
           edited: false,
@@ -72,7 +72,7 @@ class EditPostModal extends Component {
             redirect: 'follow'
           };
           
-          fetch(globalConstants.host + this.props.postPath, requestOptions)
+          fetch(host + this.props.postPath, requestOptions)
             .then(response => response.json())
             .then(result => {
               const resultCode = result.code;
@@ -82,7 +82,7 @@ class EditPostModal extends Component {
                 window.location.reload();
                 this.close();
               } else {
-                this.props.history.push('/');
+                this.props.history.push('sign-in');
               }
             }
             )
@@ -109,7 +109,7 @@ render() {
 
     return (
         <>
-<Button variant="primary" size="lg" onClick={this.open}>Edit this post</Button>
+
 
 <Modal show={this.state.showModal} onHide={this.close} animation={true} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
 <Modal.Header closeButton>

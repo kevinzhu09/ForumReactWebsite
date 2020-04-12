@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import { withRouter } from 'react-router-dom';
-import globalConstants from '../../../globalConstants';
+import { host } from '../../../globalConstants';
 
 
 class DeletePostModal extends Component {
@@ -54,7 +54,7 @@ class DeletePostModal extends Component {
             redirect: 'follow'
           };
           
-          fetch(globalConstants.host + this.props.postPath, requestOptions)
+          fetch(host + this.props.postPath, requestOptions)
             .then(response => response.json())
             .then(result => {
               const resultCode = result.code;
@@ -63,7 +63,7 @@ class DeletePostModal extends Component {
                 this.close();
                 this.props.history.push('/my-page');
               } else {
-                this.props.history.push('/');
+                this.props.history.push('sign-in');
               }
             }
             )
@@ -72,7 +72,7 @@ class DeletePostModal extends Component {
               });
             
         } else {
-          this.props.history.push('/');
+          this.props.history.push('sign-in');
         }
         this.setState({validated:true});
   }

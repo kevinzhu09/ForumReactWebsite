@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
-import globalConstants from '../../globalConstants';
+import { host } from '../../globalConstants';
 
 
   class RegisterForm extends Component {
@@ -13,12 +13,12 @@ import globalConstants from '../../globalConstants';
           this.state = {
             validated: false,
             isValid: null,
-            firstName: null,
-            lastName: null,
-            email: null,
-            username: null,
-            password: null,
-            passwordConfirmation: null,
+            firstName: "",
+            lastName: "",
+            email: "",
+            username: "",
+            password: "",
+            passwordConfirmation: "",
             agreeTerms: null,
             emailTaken: false,
             usernameTaken: false,
@@ -118,7 +118,7 @@ import globalConstants from '../../globalConstants';
                 body: raw,
                 redirect: 'follow'
               };
-              fetch(globalConstants.host + "/register", requestOptions)
+              fetch(host + "/register", requestOptions)
                 .then(response => response.json())
                 .then(result => {
                   const resultCode = result.code;

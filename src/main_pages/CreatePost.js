@@ -1,43 +1,29 @@
 import React, { Component } from 'react';
-import Modal from 'react-bootstrap/Modal';
+import { host } from '../globalConstants';
+import { withRouter } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { withRouter } from 'react-router-dom';
-import { host } from '../../../globalConstants';
-import TextEditor from '../text_editor/TextEditor'
+import TextEditor from './components_for_pages/text_editor/TextEditor';
+import Navigation from '../Navigation';
 
-class CreatePostModal extends Component {
-
+class CreatePost extends Component {
     constructor(props) {
         super(props);
       
         this.state = {
-          showModal: false,
-          title: null,
-          content: null,
+          title: "",
+          content: "",
           validated: false,
           noTitleNorContent: null,
           disabled: false
         };
-      
-        this.open = this.open.bind(this);
-        this.close = this.close.bind(this);
-
+    
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handleEditorChange = this.handleEditorChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-      }
-      
+      }  
 
-    open() {
-        this.setState({showModal: true});
-    }
-      
-    close() {
-        this.setState({showModal: false});
-    }
-
-    handleTitleChange(event) {
+      handleTitleChange(event) {
         const target = event.target;
         const value = target.value;
 
@@ -54,8 +40,7 @@ class CreatePostModal extends Component {
         noTitleNorContent: 0
       });
     }
-
-
+      
     handleSubmit(event) { 
         this.setState({disabled:true});
         const { title, content } = this.state;
@@ -96,7 +81,6 @@ class CreatePostModal extends Component {
 
 
               if (resultCode === 0) {
-                this.close();
                 const postID = result.post_id
                 const postURL = "/posts/".concat(postID);
                 this.props.history.push(postURL);
@@ -114,43 +98,29 @@ class CreatePostModal extends Component {
         }
         this.setState({validated:true});
   }
-
-
-render() {
+  render() {
     return (
         <>
-<Button variant="primary" size="lg" onClick={this.open}>Create a new post</Button>
-
-<Modal className="modal-container" 
-                        show={this.state.showModal} 
-                        onHide={this.close}
-                        animation={true} 
-                        size="lg"
-                        aria-labelledby="contained-modal-title-vcenter"
-                        centered
-                        >
-                        <Modal.Header closeButton>
-                            <Form.Control minLength="1" maxLength="30" type="text" value={this.state.title} onChange={this.handleTitleChange} required placeholder="Title of post:"/>
-                        </Modal.Header>
-
-                        <Modal.Body>
-                          <TextEditor initialState={this.state.content} content={this.state.content} onChange={this.handleEditorChange}></TextEditor>
-                        </Modal.Body>
-
-                        <Modal.Footer>
+        <Navigation activeKey="/create-post" createPost={true}></Navigation>
+        <h1>Create a new post</h1>
+        
+        <Form.Control minLength="1" maxLength="30" type="text" value={this.state.title} onChange={this.handleTitleChange} required placeholder="Title of post:"/>
+        
+        <TextEditor initialValue={this.state.content} content={this.state.content} onChange={this.handleEditorChange}></TextEditor>
+                             
+        <p className={(this.state.noTitleNorContent === 1) ? "d-block text-danger" : "d-none"}>Please provide a title.</p>         
+        <p className={(this.state.noTitleNorContent === 2) ? "d-block text-danger" : "d-none"}>Please provide some content.</p>
+        <p className={(this.state.noTitleNorContent === 3) ? "d-block text-danger" : "d-none"}>Please provide a title and some content.</p>
                         
-                        <p className={(this.state.noTitleNorContent === 1) ? "d-block text-danger" : "d-none"}>Please provide a title.</p>
-                        <p className={(this.state.noTitleNorContent === 2) ? "d-block text-danger" : "d-none"}>Please provide some content.</p>
-                        <p className={(this.state.noTitleNorContent === 3) ? "d-block text-danger" : "d-none"}>Please provide a title and some content.</p>
-                        
-                        <Button onClick={this.close}>Close</Button>
-                        <Button disabled={this.state.disabled} onClick={this.handleSubmit} type="submit" variant="primary">Create post</Button>
-                        </Modal.Footer>         
-                    </Modal> 
+        <Button disabled={this.state.disabled} onClick={this.handleSubmit} type="submit" variant="primary">Create post</Button>
+   
+
 
     </>
     );
 
 }
 }
-export default withRouter(CreatePostModal);
+
+
+export default withRouter(CreatePost);

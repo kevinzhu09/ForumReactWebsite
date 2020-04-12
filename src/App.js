@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import './css/App.css';
-import Welcome from './pre_login_pages/welcome/Welcome';
+import SignIn from './pre_login_pages/sign_in/SignIn';
 import MainFeed from './main_pages/MainFeed';
 import MyPage from './main_pages/MyPage';
 import Liked from './main_pages/Liked';
@@ -12,6 +12,8 @@ import ViewAuthor from './main_pages/ViewAuthor';
 import Verification from './pre_login_pages/verification/Verification';
 import PasswordReset from './pre_login_pages/password-reset/PasswordReset';
 import PasswordResetConfirm from './pre_login_pages/password-reset-confirm/PasswordResetConfirm';
+import CreatePost from './main_pages/CreatePost';
+import EditPost from './main_pages/EditPost';
 
 
 
@@ -24,17 +26,21 @@ class App extends React.Component {
     return (
       <Router>
 
-        <Route path='/' component={Welcome} exact/>
+        <Route path='/sign-in' component={SignIn} exact/>
         <Route path='/register' component={Register} exact/>
         <Route path='/verify' component={Verification} exact/>
         <Route path='/main-feed' component={MainFeed} exact/>
+        <Route path='/' component={MainFeed} exact/>
         <Route path='/my-page' component={MyPage} exact/>
         <Route path='/liked' component={Liked} exact/>
         <Route path='/account' component={Account} exact/>
+        <Route path='/create-post' component={CreatePost} exact/>
+        <Route path='/edit-post/:id' component={EditPost} exact/>
         <Route path='/posts/:id' component={ViewPost} exact/>
         <Route path='/authors/:id' component={ViewAuthor} exact/>
         <Route path='/password/reset' component={PasswordReset} exact/>
         <Route path='/password/reset/confirm' component={PasswordResetConfirm} exact/>
+
 
       </Router>     
   ); 

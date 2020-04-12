@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import WelcomeForm from './WelcomeForm';
+import SignInForm from './SignInForm';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-class Welcome extends Component {
+class SignIn extends Component {
 
     constructor(props) {
         super(props);
@@ -27,8 +27,9 @@ class Welcome extends Component {
                     ?
                     <Col xs="12" sm="10" md="8" lg="6" xl="4">
                     <h1>Sign in</h1>
-                    <a href="/register">Or, create a new account</a>
-                    <WelcomeForm onSubmit={this.handleFormSubmit}></WelcomeForm>
+                    <a href="/register" style={{display: "block"}}>Or, create a new account</a>
+                    <a href="/main-feed" style={{display: "block"}}>Or, continue as a guest without signing in</a>
+                    <SignInForm onSubmit={this.handleFormSubmit}></SignInForm>
                     <a href="/password/reset">Forgot your password? Reset your password</a>
                     </Col>
                     :
@@ -42,4 +43,4 @@ class Welcome extends Component {
         );
     }
 }
-export default Welcome;
+export default SignIn;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Navigation from '../Navigation';
 import MainPageHeader from './components_for_pages/headers/MainPageHeader';
-import globalConstants from '../globalConstants';
+import { host } from '../globalConstants';
 import { withRouter } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
@@ -42,7 +42,7 @@ class Liked extends Component {
             redirect: 'follow'
             };
 
-            fetch(globalConstants.host + '/posts/likes', requestOptions)
+            fetch(host + '/posts/likes', requestOptions)
             .then(response => response.json())
             .then(result => {
                 const resultCode = result.code;
@@ -53,7 +53,7 @@ class Liked extends Component {
                 } else if (resultCode === 1) {
                     this.setState({noPosts:true, userUsername:result.userUsername})
                 } else {
-                    this.props.history.push('/');
+                    this.props.history.push('sign-in');
                 }
             }
             )
@@ -64,7 +64,7 @@ class Liked extends Component {
         // Make the second get request for authors with the same header and request options:
         
 
-        fetch(globalConstants.host + '/authors/likes', requestOptions)
+        fetch(host + '/authors/likes', requestOptions)
         .then(response => response.json())
         .then(result => {
             const resultCode = result.code;
@@ -74,7 +74,7 @@ class Liked extends Component {
             } else if (resultCode === 1) {
                 this.setState({noAuthors:true})
             } else {
-                this.props.history.push('/');
+                this.props.history.push('sign-in');
             }
         }
         )
@@ -83,7 +83,7 @@ class Liked extends Component {
               });
 
         } else {
-            this.props.history.push('/');
+            this.props.history.push('sign-in');
         }
 
     }
@@ -116,11 +116,15 @@ class Liked extends Component {
 	render() {
 		return (
             <>
-                <Navigation activeKey="/liked"></Navigation>
+                <Navigation guest={false} userUsername={this.state.userUsername} activeKey="/liked"></Navigation>
                 <Container>
                     <MainPageHeader>
+                    {Boolean(this.state.userUsername) &&
+                        <>
                         <h1 className="display-4">These are your liked posts and authors, {this.state.userUsername}</h1>
                         <p className="lead">Create a new post, or look over the posts and authors you liked</p>
+                        </>
+                        }
                     </MainPageHeader>
 
                     <Tabs defaultActiveKey="liked-posts">

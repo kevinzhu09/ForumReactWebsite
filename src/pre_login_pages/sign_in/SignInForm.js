@@ -2,19 +2,19 @@ import React, { Component } from "react";
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import globalConstants from '../../globalConstants';
+import { host } from '../../globalConstants';
 import { withRouter } from 'react-router-dom';
 
 
-  class WelcomeForm extends Component {
+  class SignInForm extends Component {
       constructor(props) {
           super(props);
 
           this.state = {
             validated: false,
             isValid: null,
-            email: null,
-            password: null,
+            email: "",
+            password: "",
             loginFail: null,
             disabled: false
             };
@@ -24,13 +24,6 @@ import { withRouter } from 'react-router-dom';
           this.handlePasswordChange = this.handlePasswordChange.bind(this);
       }
 
-      getInitialState(){
-      return {
-        validated: false,
-        isValid: null,
-        password: null,
-        };
-      }
 
       handleEmailChange(event) {
         const target = event.target;
@@ -75,8 +68,8 @@ import { withRouter } from 'react-router-dom';
             body: raw,
             redirect: 'follow'
           };
-          
-          fetch(globalConstants.host + "/login", requestOptions)
+
+          fetch(host + "/login", requestOptions)
             .then(response => response.json())
             .then(result => {
               const resultCode = result.code;
@@ -105,7 +98,7 @@ import { withRouter } from 'react-router-dom';
 render() {
     return (
         <>
-      <Form id="welcomeForm" className="welcomeForm2" onChange={this.handleFormChange} noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
+      <Form onChange={this.handleFormChange} noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
       <Form.Row>
           <Form.Group as={Col} controlId="validationCustom03">
             <Form.Label>Email address:</Form.Label>
@@ -136,4 +129,4 @@ render() {
     )
 }
 }
-export default withRouter(WelcomeForm);
+export default withRouter(SignInForm);

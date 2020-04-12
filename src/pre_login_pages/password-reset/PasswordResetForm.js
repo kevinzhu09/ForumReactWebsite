@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import globalConstants from '../../globalConstants';
+import { host } from '../../globalConstants';
 
 
 
@@ -13,7 +13,7 @@ import globalConstants from '../../globalConstants';
           this.state = {
             validated: false,
             isValid: null,
-            email: null,
+            email: "",
             notFound: null,
             disabled: false
             };
@@ -58,7 +58,7 @@ import globalConstants from '../../globalConstants';
             redirect: 'follow'
           };
           
-          fetch(globalConstants.host + "/password/reset", requestOptions)
+          fetch(host + "/password/reset", requestOptions)
             .then(response => response.json())
             .then(result => {
               const resultCode = result.code;

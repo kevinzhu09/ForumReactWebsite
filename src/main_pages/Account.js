@@ -9,16 +9,62 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Container from 'react-bootstrap/Container';
 
 import DeleteAccount from './components_for_pages/other/DeleteAccount.js'
-import ChangePassword from './components_for_pages/other/ChangePassword'
+import ChangePassword from './components_for_pages/other/ChangePassword';
+
+import { host } from '../globalConstants';
+import { withRouter } from 'react-router-dom';
 
 
 class Account extends Component {
   constructor(props) {
     super(props);
+
+    this.state = { 
+      userUsername: null,
+      showChangePassword: true
+   };
+
     this.handleChangePassword = this.handleChangePassword.bind(this);
-    this.state = {showChangePassword: true};
 }
 
+componentDidMount() {
+  const token = window.sessionStorage.token;
+  if (token) {
+// Make the get request:
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append("Authorization", "Bearer " + token);
+      myHeaders.append("Accept", "application/json");
+      
+      var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+      };
+
+      fetch(host + '/users/username', requestOptions)
+      .then(response => response.json())
+      .then(result => {
+          const resultCode = result.code;
+
+
+          if (resultCode === 0) {
+              this.setState({userUsername:result.userUsername})
+          } else if (resultCode === 1) {
+            this.props.history.push('sign-in');
+          } else {
+            this.props.history.push('sign-in');
+          }
+      }
+      )
+      .catch(error => {
+            
+        });
+
+      } else {
+        this.props.history.push('sign-in');
+    }
+    }
 handleChangePassword() {
     this.setState({showChangePassword: false})
 }
@@ -27,7 +73,7 @@ handleChangePassword() {
 	render() {
 		return (
     <>
-                <Navigation activeKey="/account"></Navigation>
+    <Navigation guest={false} userUsername={this.state.userUsername} activeKey="/account"></Navigation>
 
 <Container>
   <Row className="justify-content-center">
@@ -83,4 +129,4 @@ handleChangePassword() {
 	}
 }
 
-export default Account
+export default withRouter(Account)

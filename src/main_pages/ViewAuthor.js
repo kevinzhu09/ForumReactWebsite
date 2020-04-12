@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Navigation from '../Navigation';
 import ViewAuthorHeader from './components_for_pages/headers/ViewAuthorHeader';
-import globalConstants from '../globalConstants';
+import { host } from '../globalConstants';
 import { withRouter } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
@@ -15,7 +15,9 @@ class ViewAuthor extends Component {
            postsRetrieved: false,
            authorUsername: null,
            noPosts: false,
-           initialLiked: null
+           initialLiked: null,
+           userUsername: null,
+           guest: null
         };
         this.authorID = this.props.match.params.id;
         this.authorPath =  "/authors/".concat(this.authorID);
@@ -26,47 +28,53 @@ class ViewAuthor extends Component {
 
      componentDidMount() {
         const token = window.sessionStorage.token;
-        if (token) {
 // Make the get request:
-            var myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/json");
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        if (token) {
             myHeaders.append("Authorization", "Bearer " + token);
-            myHeaders.append("Accept", "application/json");
-            
-            var requestOptions = {
-            method: 'GET',
-            headers: myHeaders,
-            redirect: 'follow'
-            };
-            
-            const fetchURI = this.authorPath
-
-            fetch(globalConstants.host + fetchURI, requestOptions)
-            .then(response => response.json())
-            .then(result => {
-                const resultCode = result.code;
-
-
-                if (resultCode === 0) {
-                    const resultPosts = result.posts;
-                    const resultUsername = result.authorUsername;
-                    if (result.ownPage === true) {this.props.history.push('/my-page');}
-                    this.setState({posts:resultPosts, postsRetrieved:true, authorUsername:resultUsername, initialLiked: result.liked_status})
-                } else if (resultCode === 1) {
-                    this.setState({noPosts:true, authorUsername:result.authorUsername})
-                } else if (resultCode === 2) {
-                    // redirect to "author does not exist"?
-                } else {
-                    this.props.history.push('/');
-                }
-            }
-            )
-            .catch(error => {
-                  
-              });
-        } else {
-            this.props.history.push('/');
         }
+        myHeaders.append("Accept", "application/json");
+        
+        var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+        };
+        
+        const fetchURI = this.authorPath
+
+        fetch(host + fetchURI, requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            const resultCode = result.code;
+            if (token) {
+            if (resultCode === 0) {
+                if (result.ownPage === true) {this.props.history.push('/my-page');}
+                this.setState({guest:false, userUsername:result.userUsername, posts:result.posts, postsRetrieved:true, authorUsername:result.authorUsername, initialLiked: result.liked_status})
+            } else if (resultCode === 1) {
+                this.setState({guest:false, userUsername:result.userUsername, noPosts:true, authorUsername:result.authorUsername})
+            } else if (resultCode === 2) {
+                // redirect to "author does not exist"?
+            } else {
+                
+            }
+        } else if (result.logged_in_as==='guest') {
+            if (resultCode === 0) {
+                this.setState({guest:true, userUsername:false, posts:result.posts, postsRetrieved:true, authorUsername:result.authorUsername})
+            } else if (resultCode === 1) {
+                this.setState({guest:true, userUsername:false, noPosts:true, authorUsername:result.authorUsername})
+            } else if (resultCode === 2) {
+                // redirect to "author does not exist"?
+            } else {
+                
+            }
+        } else {window.location.reload();}
+        }
+        )
+        .catch(error => {
+                
+            });
     }
 
     renderTablePosts() {
@@ -87,11 +95,15 @@ class ViewAuthor extends Component {
 	render() {
 		return (
             <>
-                <Navigation activeKey={this.authorPath} author={true}>{this.state.authorUsername}</Navigation>
+                <Navigation guest={this.state.guest} userUsername={this.state.userUsername} activeKey={this.authorPath} author={true}>{this.state.authorUsername}</Navigation>
                 <Container>
-                    <ViewAuthorHeader initialLiked={this.state.initialLiked} authorID={this.authorID} authorPath={this.authorPath}>
+                    <ViewAuthorHeader guest={this.state.guest} initialLiked={this.state.initialLiked} authorID={this.authorID} authorPath={this.authorPath}>
+                        {Boolean(this.state.authorUsername) &&
+                        <>
                         <h1 className="display-4">This is {this.state.authorUsername}'s page</h1>
                         <p className="lead">Look over their posts, or like their page</p>
+                        </>
+                        }
                     </ViewAuthorHeader>
                     {this.state.noPosts ?
                     <h2>This author has no posts.</h2>

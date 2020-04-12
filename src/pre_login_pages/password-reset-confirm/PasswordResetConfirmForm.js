@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import globalConstants from '../../globalConstants';
+import { host } from '../../globalConstants';
 import { withRouter } from 'react-router-dom';
 
 
@@ -14,8 +14,8 @@ import { withRouter } from 'react-router-dom';
           this.state = {
             validated: false,
             isValid: null,
-            newPassword: null,
-            confirmPassword: null,
+            newPassword: "",
+            confirmPassword: "",
             passwordsMatch: null,
             disabled: false
           };
@@ -87,7 +87,7 @@ import { withRouter } from 'react-router-dom';
                 redirect: 'follow'
               };
               
-              fetch(globalConstants.host + "/password", requestOptions)
+              fetch(host + "/password", requestOptions)
                 .then(response => response.json())
                 .then(result => {
                   const resultCode = result.code;

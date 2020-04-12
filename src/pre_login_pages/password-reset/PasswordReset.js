@@ -27,7 +27,7 @@ class PasswordReset extends Component {
                     ?
                     <Col xs="12" sm="11" md="10" lg="8" xl="6">
                     <h1>Reset your password</h1>
-                    <a href="/">Or, login if you have an account</a>
+                    <a href='sign-in'>Or, login if you have an account</a>
                     <PasswordResetForm onSubmit={this.handleFormSubmit}></PasswordResetForm> 
                     </Col>
                     :
