@@ -17,7 +17,8 @@ import { withRouter } from 'react-router-dom';
             newPassword: "",
             confirmPassword: "",
             passwordsMatch: null,
-            disabled: false
+            disabled: false,
+            expired: false
           };
 
           this.newRef = React.createRef();
@@ -72,15 +73,14 @@ import { withRouter } from 'react-router-dom';
             event.preventDefault();
             event.stopPropagation();
             if (validity && match) {
-              // Make the put request:
-              var myHeaders = new Headers();
+              let myHeaders = new Headers();
               myHeaders.append("Content-Type", "application/json");
               myHeaders.append("Authorization", "Bearer " + token);
               myHeaders.append("Accept", "application/json");
               
-              var raw = JSON.stringify({"new_password":confirmPassword});
+              const raw = JSON.stringify({"new_password":confirmPassword});
               
-              var requestOptions = {
+              const requestOptions = {
                 method: 'PUT',
                 headers: myHeaders,
                 body: raw,
@@ -97,7 +97,12 @@ import { withRouter } from 'react-router-dom';
                     const resultToken = result.access_token;
                     window.sessionStorage.token = resultToken;
                     this.props.history.push('/main-feed');
-                  }
+                    return;
+                  } else if (resultCode === 'expired') {
+                    alert("Sorry, the password reset email expired. You'll have to send it again.");
+                    this.props.history.push('/password/reset');
+                    return;
+                }
                 }
                 )
                 .catch(error => {
@@ -119,7 +124,6 @@ render() {
 <Form.Group as={Col} md="6">
 <Form.Label>New password:</Form.Label>
     <Form.Control type="password" 
-    id="new-password" 
     value={this.state.newPassword} 
     onChange={this.handleNewChange}
     ref={this.newRef}
@@ -139,7 +143,6 @@ render() {
 <Form.Group as={Col} md="6">
 <Form.Label>Confirm new password:</Form.Label>
     <Form.Control type="password" 
-    id="confirm-password" 
     value={this.state.confirmPassword} 
     onChange={this.handleConfirmChange}
     ref={this.confirmRef}

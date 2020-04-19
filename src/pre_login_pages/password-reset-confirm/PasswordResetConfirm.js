@@ -5,7 +5,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import queryString from 'query-string'
+import queryString from 'query-string';
 
 
 class PasswordResetConfirm extends Component {
@@ -27,7 +27,7 @@ class PasswordResetConfirm extends Component {
     render() {
         return (
             <Container>
-            <Row className="h-100 justify-content-center align-content-center">
+            <Row className="h-100 align-content-center">
                 {
                     this.state.showForm
                     ?

@@ -15,19 +15,18 @@ class Register extends Component {
 
     handleFormSubmit() {
         this.setState({showForm: false})
-        // can use this function to accept props passed up from the form, and do something with them
     }
 
     render() {
         return (
             <Container>
-            <Row className="h-100 justify-content-center align-content-center">
+            <Row className="h-100 align-content-center">
                 {
                     this.state.showForm
                     ?
                     <Col xs="12" sm="11" md="11" lg="10" xl="10">
                     <h1>Register a new account</h1>
-                    <a href='sign-in'>Or, login if you have an account</a>
+                    <a href='/sign-in'>Or, login if you have an account</a>
                     <RegisterForm onSubmit={this.handleFormSubmit}></RegisterForm> 
                     </Col>
                     :

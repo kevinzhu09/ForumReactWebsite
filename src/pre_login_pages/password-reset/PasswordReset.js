@@ -21,13 +21,13 @@ class PasswordReset extends Component {
     render() {
         return (
             <Container>
-            <Row className="h-100 justify-content-center align-content-center">
+            <Row className="h-100 align-content-center">
                 {
                     this.state.showForm
                     ?
                     <Col xs="12" sm="11" md="10" lg="8" xl="6">
                     <h1>Reset your password</h1>
-                    <a href='sign-in'>Or, login if you have an account</a>
+                    <a href='/sign-in'>Or, login if you have an account</a>
                     <PasswordResetForm onSubmit={this.handleFormSubmit}></PasswordResetForm> 
                     </Col>
                     :

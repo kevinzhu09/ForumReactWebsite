@@ -38,7 +38,7 @@ class LikeButton extends Component {
     fetchRequest(isLikeRequest) {
             const token = window.sessionStorage.token;
 
-            var myHeaders = new Headers();
+            let myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
             myHeaders.append("Authorization", "Bearer " + token);
             myHeaders.append("Accept", "application/json");
@@ -50,7 +50,7 @@ class LikeButton extends Component {
             } else {
                 requestMethod = 'DELETE';
             }
-            var requestOptions = {
+            const requestOptions = {
               method: requestMethod,
               headers: myHeaders,
               redirect: 'follow'
@@ -62,8 +62,12 @@ class LikeButton extends Component {
   
                 if (resultCode === 0) {
                     this.setState({liked: isLikeRequest, disabled: false});
+                } else if (resultCode === 'expired') {
+                    this.props.history.push('/session-expired');
+                    return;
                 } else {
                     this.props.history.push('/sign-in');
+                    return;
                 }
               }
               )
@@ -91,7 +95,7 @@ render() {
         <>
         <OverlayTrigger key='top' placement='top' overlay=
         {
-            <Tooltip id={`tooltip-$liked`}>
+            <Tooltip>
                 Liked!
             </Tooltip>
         }>

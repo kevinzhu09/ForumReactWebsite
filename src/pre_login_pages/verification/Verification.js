@@ -17,7 +17,6 @@ class Verification extends Component {
 
     handleFormSubmit() {
         this.setState({showForm: false});
-        // can use this function to accept props passed up from the form, and do something with them
     }
 
     componentDidMount() {
@@ -28,7 +27,7 @@ class Verification extends Component {
     render() {
         return (
             <Container>
-            <Row className="h-100 justify-content-center align-content-center">
+            <Row className="h-100 align-content-center">
                 {
                     this.state.showForm
                     ?

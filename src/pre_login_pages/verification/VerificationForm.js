@@ -15,9 +15,9 @@ import { withRouter } from 'react-router-dom';
             validated: false,
             isValid: null,
             password: "",
-            noID: null,
-            verifyIssue: null,
-            disabled: false
+            disabled: false,
+            expired: false,
+            errorMessage: null
             };
 
           this.passwordRef = React.createRef();
@@ -28,13 +28,13 @@ import { withRouter } from 'react-router-dom';
 
 
       handlePasswordChange(event) {
-        this.setState({passwordsMatch:true, noID: false,  verifyIssue: false});
         const target = event.target;
         target.setCustomValidity("");
         const value = target.value;
 
         this.setState({
-          password: value
+          password: value,
+          errorMessage: null
         });
       }
 
@@ -50,15 +50,14 @@ import { withRouter } from 'react-router-dom';
         event.preventDefault();
         event.stopPropagation();
         if (validity) {
-          // Make the put request:
-          var myHeaders = new Headers();
+          let myHeaders = new Headers();
           myHeaders.append("Content-Type", "application/json");
           myHeaders.append("Authorization", "Bearer " + token);
           myHeaders.append("Accept", "application/json");
           
-          var raw = JSON.stringify({"password":password});
+          const raw = JSON.stringify({"password":password});
           
-          var requestOptions = {
+          const requestOptions = {
             method: 'PUT',
             headers: myHeaders,
             body: raw,
@@ -69,18 +68,40 @@ import { withRouter } from 'react-router-dom';
             .then(response => response.json())
             .then(result => {
               const resultCode = result.code;
-              const verifyIssueBool = Boolean(resultCode & 1)
-              if (verifyIssueBool) {this.passwordRef.current.setCustomValidity("There was a problem with verifying your account. The account could already be verified, or some other issue.");}
-              const noIDBool = Boolean(resultCode & 2)
-              if (noIDBool) {this.passwordRef.current.setCustomValidity("The password is not correct.");}
-              this.setState({verifyIssue:verifyIssueBool, noID:noIDBool});
-
-              // message for code4: "The verification link could have expired. You can try again, or create the account again and send another link."
               if (resultCode === 0) {
                 this.props.onSubmit();
                 const resultToken = result.access_token;
                 window.sessionStorage.token = resultToken;
                 this.props.history.push('/main-feed');
+                return;
+              } else if (resultCode === 'expired') {
+                alert("Sorry, the verification email expired. You'll have to register again.");
+                this.props.history.push('/register');
+                return;
+              } else {
+                    let errorMessage;
+ 
+                    switch (resultCode) {
+                      case 1:
+                        errorMessage = "The password is not correct.";
+                        break;
+                      case 2:
+                        errorMessage = "Something went wrong. Try registering again, or click the link from the email again.";
+                        break;
+                      case 3:
+                        errorMessage = "That email is taken. That username is also taken.";
+                        break;
+                      case 4:
+                        errorMessage = "That email is taken.";
+                        break;
+                      case 5:
+                        errorMessage = "That username is taken.";
+                        break;
+                      default:
+                        errorMessage = "There was a problem with verifying your account. The password could be wrong, the account could already be verified, or some other issue. Try registering again, or click the link from the email again.";
+                    }
+                    this.passwordRef.current.setCustomValidity(errorMessage);
+                    this.setState({errorMessage:errorMessage, disabled:false});
               }
             }
             )
@@ -97,27 +118,22 @@ import { withRouter } from 'react-router-dom';
 render() {
     return (
         <>
-      <Form id="registerForm" className="registerForm2" onChange={this.handleFormChange} noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
+      <Form onChange={this.handleFormChange} noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
         <Form.Row>
-            <Form.Group as={Col} controlId="validationCustom06">              
+            <Form.Group as={Col}>              
                 <Form.Label>Password:</Form.Label>
                 <Form.Control 
-                id="password"
                 value={this.state.password}
                 onChange={this.handlePasswordChange}
                 ref={this.passwordRef}
                 type="password" placeholder="Password" required/>
 
-                {(this.state.noID && this.state.validated) ?
-                <Form.Text className="text-danger">The verification link could have expired. You can try again, or create the account again and send another link.</Form.Text> :
+                {(Boolean(this.state.errorMessage) && this.state.validated) ?
+                <Form.Text className="text-danger">{this.state.errorMessage}</Form.Text> :
                 (
-                    (this.state.verifyIssue && this.state.validated) ? 
-                    <Form.Text className="text-danger">There was a problem with verifying your account. The password could be wrong, the account could already be verified, or some other issue.</Form.Text> : 
-                    (
                         (!Boolean(this.state.password) && this.state.validated) ? 
                         <Form.Text className="text-danger">Please provide a valid password.</Form.Text> : 
                         <Form.Text className="invisible">placeholder</Form.Text>
-                    )
                 )
                 }
             </Form.Group>

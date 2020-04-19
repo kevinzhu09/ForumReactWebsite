@@ -44,14 +44,13 @@ import { host } from '../../globalConstants';
         event.preventDefault();
         event.stopPropagation();
         if (validity) {
-          // Make the post request:
-          var myHeaders = new Headers();
+          let myHeaders = new Headers();
           myHeaders.append("Content-Type", "application/json");
           myHeaders.append("Accept", "application/json");
           
-          var raw = JSON.stringify({"email":email});
+          const raw = JSON.stringify({"email":email});
           
-          var requestOptions = {
+          const requestOptions = {
             method: 'POST',
             headers: myHeaders,
             body: raw,
@@ -88,7 +87,6 @@ render() {
             <Form.Group as={Col}>              
                 <Form.Label>Email:</Form.Label>
                 <Form.Control 
-                id="email"
                 value={this.state.email}
                 onChange={this.handleEmailChange}
                 ref={this.emailRef}

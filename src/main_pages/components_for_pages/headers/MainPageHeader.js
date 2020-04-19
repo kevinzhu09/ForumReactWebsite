@@ -16,7 +16,7 @@ class MainPageHeader extends Component {
                 <hr className="my-4"/>
                 <OverlayTrigger key='top' placement='top' overlay=
                 {
-                    <Tooltip id={`tooltip-$sign-in`}>
+                    <Tooltip>
                         You must sign in or register to create posts.
                     </Tooltip>
                 }>

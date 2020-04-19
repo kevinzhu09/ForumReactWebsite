@@ -54,15 +54,14 @@ import { withRouter } from 'react-router-dom';
         event.preventDefault();
         event.stopPropagation();
         if (validity) {
-          // Make the post request:
-          var myHeaders = new Headers();
+          let myHeaders = new Headers();
           myHeaders.append("Content-Type", "application/json");
           myHeaders.append("Accept", "application/json");
           
         
-          var raw = JSON.stringify({"email":email,"password":password});
+          const raw = JSON.stringify({"email":email,"password":password});
           
-          var requestOptions = {
+          const requestOptions = {
             method: 'POST',
             headers: myHeaders,
             body: raw,
@@ -80,6 +79,7 @@ import { withRouter } from 'react-router-dom';
                 const resultToken = result.access_token;
                 window.sessionStorage.token = resultToken;
                 this.props.history.push('/main-feed');
+                return;
               } else {
                   this.setState({loginFail:true, disabled:false})
               }
@@ -100,7 +100,7 @@ render() {
         <>
       <Form onChange={this.handleFormChange} noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
       <Form.Row>
-          <Form.Group as={Col} controlId="validationCustom03">
+          <Form.Group as={Col}>
             <Form.Label>Email address:</Form.Label>
             <Form.Control type="email" 
             value={this.state.email}
@@ -114,7 +114,7 @@ render() {
           </Form.Group>
           </Form.Row>
         <Form.Row>
-            <Form.Group as={Col} controlId="validationCustom06">              
+            <Form.Group as={Col}>              
                 <Form.Label>Password:</Form.Label>
                 <Form.Control 
                 value={this.state.password}
@@ -122,7 +122,8 @@ render() {
                 type="password" placeholder="Password" required/>
             </Form.Group>
         </Form.Row>
-          <Button disabled={this.state.disabled} variant="primary" type="submit">Sign in</Button>
+        <a href="/password/reset" style={{display: "block"}}>Forgot your password? Reset your password</a>
+          <Button className="my-3" disabled={this.state.disabled} variant="primary" type="submit">Sign in</Button>
           <Form.Text className={(this.state.loginFail && this.state.validated) ? "visible text-danger" : "invisible"}>The email or password is incorrect, please fix it and resubmit.</Form.Text>
       </Form>
         </>

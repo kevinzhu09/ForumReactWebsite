@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import { withRouter } from 'react-router-dom';
 import { host } from '../../../globalConstants';
-import { Form } from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 
 class ChangePassword extends Component {
@@ -84,16 +84,15 @@ class ChangePassword extends Component {
         event.preventDefault();
         event.stopPropagation();
         if (validity && match) {
-          // Make the put request:
-          var myHeaders = new Headers();
+          let myHeaders = new Headers();
           myHeaders.append("Content-Type", "application/json");
           myHeaders.append("Authorization", "Bearer " + token);
           myHeaders.append("Accept", "application/json");
           
         
-          var raw = JSON.stringify({"old_password":currentPassword, "new_password":confirmPassword});
+          const raw = JSON.stringify({"old_password":currentPassword, "new_password":confirmPassword});
           
-          var requestOptions = {
+          const requestOptions = {
             method: 'PUT',
             headers: myHeaders,
             body: raw,
@@ -107,7 +106,6 @@ class ChangePassword extends Component {
               
 
               if (resultCode === 0) {
-                // window.location.reload();
                 this.props.onSubmit();
               } else if (resultCode === 1) {
 
@@ -115,8 +113,12 @@ class ChangePassword extends Component {
                 this.currentRef.current.setCustomValidity("The current password was not correct.");
                 this.setState({wrongPassword:true});
               } else if (resultCode === 4) {
-                this.props.history.push('sign-in');
-              }
+                this.props.history.push('/sign-in');
+                return;
+              } else if (resultCode === 'expired') {
+                this.props.history.push('/session-expired');
+                return;
+            }
             }
             )
             .catch(error => {
@@ -134,11 +136,10 @@ render() {
     return (
         <>
 <h2>Change my password</h2>
-<Form id="registerForm" className="registerForm2" onChange={this.handleFormChange} noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
+<Form onChange={this.handleFormChange} noValidate validated={this.state.validated} onSubmit={this.handleSubmit}>
 <Form.Group as={Col} md="6">
     <Form.Label>Current password:</Form.Label>
     <Form.Control type="password" 
-    id="current-password" 
     value={this.state.currentPassword} 
     onChange={this.handleCurrentChange}
     ref={this.currentRef}
@@ -159,7 +160,6 @@ render() {
 <Form.Group as={Col} md="6">
 <Form.Label>New password:</Form.Label>
     <Form.Control type="password" 
-    id="new-password" 
     value={this.state.newPassword} 
     onChange={this.handleNewChange}
     ref={this.newRef}
@@ -178,8 +178,7 @@ render() {
 
 <Form.Group as={Col} md="6">
 <Form.Label>Confirm new password:</Form.Label>
-    <Form.Control type="password" 
-    id="confirm-password" 
+    <Form.Control type="password"  
     value={this.state.confirmPassword} 
     onChange={this.handleConfirmChange}
     ref={this.confirmRef}

@@ -1,6 +1,5 @@
 import React from 'react';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
-import './css/App.css';
 import SignIn from './pre_login_pages/sign_in/SignIn';
 import MainFeed from './main_pages/MainFeed';
 import MyPage from './main_pages/MyPage';
@@ -14,14 +13,15 @@ import PasswordReset from './pre_login_pages/password-reset/PasswordReset';
 import PasswordResetConfirm from './pre_login_pages/password-reset-confirm/PasswordResetConfirm';
 import CreatePost from './main_pages/CreatePost';
 import EditPost from './main_pages/EditPost';
+import SessionExpired from './pre_login_pages/other/SessionExpired';
+import ErrorPage from './ErrorPage';
+import NotFound from './NotFound';
+import LoggedIn from './pre_login_pages/google/LoggedIn';
 
 
 
 class App extends React.Component {
-  componentDidMount() {
-    this.props.hideLoader();
-  }
-  
+
   render() {   
     return (
       <Router>
@@ -40,6 +40,10 @@ class App extends React.Component {
         <Route path='/authors/:id' component={ViewAuthor} exact/>
         <Route path='/password/reset' component={PasswordReset} exact/>
         <Route path='/password/reset/confirm' component={PasswordResetConfirm} exact/>
+        <Route path='/session-expired' component={SessionExpired} exact/>
+        <Route path='/error-page' component={ErrorPage} exact/>
+        <Route path='/not-found' component={NotFound} exact/>
+        <Route path='/logged-in' component={LoggedIn} exact/>
 
 
       </Router>     

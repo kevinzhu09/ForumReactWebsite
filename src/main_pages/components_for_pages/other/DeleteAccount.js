@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import { withRouter } from 'react-router-dom';
 import { host } from '../../../globalConstants';
-import { Form } from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 
@@ -63,16 +63,15 @@ class DeleteAccount extends Component {
         event.preventDefault();
         event.stopPropagation();
         if (Boolean(currentPassword)) {
-          // Make the delete request:
-          var myHeaders = new Headers();
+          let myHeaders = new Headers();
           myHeaders.append("Content-Type", "application/json");
           myHeaders.append("Authorization", "Bearer " + token);
           myHeaders.append("Accept", "application/json");
           
         
-          var raw = JSON.stringify({"password":currentPassword});
+          const raw = JSON.stringify({"password":currentPassword});
           
-          var requestOptions = {
+          const requestOptions = {
             method: 'DELETE',
             headers: myHeaders,
             body: raw,
@@ -86,13 +85,18 @@ class DeleteAccount extends Component {
               
 
               if (resultCode === 0) {
-                this.props.history.push('sign-in');
+                this.props.history.push('/sign-in');
+                return;
               } else if (resultCode === 1) {
                 this.setState({wrongPassword:true, disabled:false});
                 this.currentRef.current.setCustomValidity("The current password was not correct.")
                 this.close();
+              } else if (resultCode === 'expired') {
+                this.props.history.push('/session-expired');
+                return;
               } else {
-                this.props.history.push('sign-in');
+                this.props.history.push('/sign-in');
+                return;
               }
             }
             )
@@ -114,7 +118,6 @@ render() {
 <Form.Group as={Col} md="6">
     <Form.Label>Current password:</Form.Label>
     <Form.Control type="password" 
-    id="current-password" 
     value={this.state.currentPassword} 
     onChange={this.handleCurrentChange}
     ref={this.currentRef}
@@ -136,7 +139,7 @@ render() {
 
 <Modal show={this.state.showModal} onHide={this.close} animation={true} aria-labelledby="contained-modal-title-vcenter" centered>
 <Modal.Header closeButton>
-  <Modal.Title bsPrefix='h5' id="contained-modal-title-vcenter" style={{margin:"0"}}>Permanently delete your account?</Modal.Title>
+  <Modal.Title bsPrefix='h5' style={{margin:"0"}}>Permanently delete your account?</Modal.Title>
 </Modal.Header>
 <Modal.Body>This cannot be undone. Are you really sure?</Modal.Body>
 <Modal.Footer>

@@ -1,5 +1,3 @@
-const APIParameters = {
-    host: 'https://host/api'
-};
+export const host = 'https://host/api'; 
+export const tinyAPIKey = 'keyFromTinyAPI';
 
-export default APIParameters;

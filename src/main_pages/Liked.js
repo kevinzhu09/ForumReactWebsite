@@ -8,6 +8,9 @@ import Table from 'react-bootstrap/Table';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
+import Spinner from 'react-bootstrap/Spinner';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 class Liked extends Component {
 
@@ -20,7 +23,8 @@ class Liked extends Component {
            noPosts: false,
            authors: null,
            authorsRetrieved: false,
-           noAuthors: false
+           noAuthors: false,
+           loading: true
         };
         this.renderTablePosts = this.renderTablePosts.bind(this);
         this.renderAuthors = this.renderAuthors.bind(this);
@@ -30,13 +34,12 @@ class Liked extends Component {
      componentDidMount() {
         const token = window.sessionStorage.token;
         if (token) {
-// Make the get request:
-            var myHeaders = new Headers();
+            let myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
             myHeaders.append("Authorization", "Bearer " + token);
             myHeaders.append("Accept", "application/json");
             
-            var requestOptions = {
+            const requestOptions = {
             method: 'GET',
             headers: myHeaders,
             redirect: 'follow'
@@ -52,17 +55,19 @@ class Liked extends Component {
                     this.setState({posts:result.posts, postsRetrieved:true, userUsername:result.userUsername})
                 } else if (resultCode === 1) {
                     this.setState({noPosts:true, userUsername:result.userUsername})
+                } else if (resultCode === 'expired') {
+                    this.props.history.push('/session-expired');
+                    return;
                 } else {
-                    this.props.history.push('sign-in');
+                    this.props.history.push('/sign-in');
+                    return;
                 }
+                this.setState({loading:false});
             }
             )
             .catch(error => {
-                  
+                this.setState({loading:false});
               });
-        
-        // Make the second get request for authors with the same header and request options:
-        
 
         fetch(host + '/authors/likes', requestOptions)
         .then(response => response.json())
@@ -73,24 +78,30 @@ class Liked extends Component {
                 this.setState({authors:result.authors, authorsRetrieved:true})
             } else if (resultCode === 1) {
                 this.setState({noAuthors:true})
+            } else if (resultCode === 'expired') {
+                this.props.history.push('/session-expired');
+                return;
             } else {
-                this.props.history.push('sign-in');
+                this.props.history.push('/sign-in');
+                return;
             }
+            this.setState({loading:false});
         }
         )
         .catch(error => {
-                  
+            this.setState({loading:false});
               });
 
         } else {
-            this.props.history.push('sign-in');
+            this.props.history.push('/sign-in');
+            return;
         }
 
     }
 
     renderTablePosts() {
         return this.state.posts.map((post, index) => {
-            const { post_id, author_id, title, username, created_timestamp } = post; //destructuring
+            const { post_id, author_id, title, username, created_timestamp } = post;
             const postURL = "/posts/".concat(post_id);
             const authorURL = "/authors/".concat(author_id);
             return (
@@ -105,7 +116,7 @@ class Liked extends Component {
 
     renderAuthors() {
         return this.state.authors.map((author, index) => {
-            const { author_id, username } = author; //destructuring
+            const { author_id, username } = author;
             const authorURL = "/authors/".concat(author_id);
             return (
             <ListGroup.Item style={{backgroundColor: "transparent"}}><a href={authorURL}>{username}</a></ListGroup.Item>
@@ -118,6 +129,14 @@ class Liked extends Component {
             <>
                 <Navigation guest={false} userUsername={this.state.userUsername} activeKey="/liked"></Navigation>
                 <Container>
+                {this.state.loading ?
+                    <Row className="h-100 align-content-center">
+                    <Col className="d-flex justify-content-center">
+                    <Spinner animation="border" variant="primary" />
+                    </Col>
+                    </Row>
+                    :
+                    <>
                     <MainPageHeader>
                     {Boolean(this.state.userUsername) &&
                         <>
@@ -132,7 +151,7 @@ class Liked extends Component {
                     {this.state.noPosts ?
                     <h2>You have no liked posts.</h2>
                     :
-                    <Table bordered hover id='posts'>
+                    <Table bordered hover>
                             <thead>
                             <tr>
                                 <th scope="col">Title</th>
@@ -149,12 +168,12 @@ class Liked extends Component {
                     {this.state.noAuthors ?
                     <h2>You have no liked authors.</h2>
                     :
-                    <ListGroup bordered hover id='authors'>
+                    <ListGroup bordered hover>
                             {this.state.authorsRetrieved && this.renderAuthors()}
                         </ListGroup>}
                     </Tab>
                     </Tabs>
-
+                    </>}
                 </Container>
             </>
 

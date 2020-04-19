@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
 import { withRouter } from 'react-router-dom';
 
 import './css/Navigation.css';
@@ -31,10 +32,10 @@ class Navigation extends Component {
             <>
 {Boolean(this.props.guest) ?
 
-<Navbar onClick={this.state.handleClick} className="navColor" variant="light" expand="lg">
+<Navbar onClick={this.handleClick} className="navColor" variant="light" expand="lg">
 <Navbar.Brand href="/main-feed">Kevin's Forum</Navbar.Brand>
 <Navbar.Toggle aria-controls="basic-navbar-nav" />
-<Navbar.Collapse id="basic-navbar-nav">
+<Navbar.Collapse>
 <Nav activeKey={this.props.activeKey} className="mr-auto">
     <Nav.Link href="/main-feed">Home</Nav.Link>
     <Nav.Link href="/my-page" disabled={true}>My Page</Nav.Link>
@@ -55,10 +56,10 @@ class Navigation extends Component {
 </Navbar>
 :
 
-            <Navbar onClick={this.state.handleClick} className="navColor" variant="light" expand="lg">
+            <Navbar onClick={this.handleClick} className="navColor" variant="light" expand="lg">
                 <Navbar.Brand href="/main-feed">Kevin's Forum</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
+                <Navbar.Collapse>
                 <Nav activeKey={this.props.activeKey} className="mr-auto">
                     <Nav.Link href="/main-feed">Home</Nav.Link>
                     <Nav.Link href="/my-page">My Page</Nav.Link>

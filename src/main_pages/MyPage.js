@@ -5,6 +5,9 @@ import { host } from '../globalConstants';
 import { withRouter } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
+import Spinner from 'react-bootstrap/Spinner';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 class MyPage extends Component {
 
@@ -12,6 +15,7 @@ class MyPage extends Component {
         super(props);
         this.state = { 
            posts: null,
+           loading: true,
            postsRetrieved: false,
            userUsername: null,
            authorID: null,
@@ -25,13 +29,13 @@ class MyPage extends Component {
      componentDidMount() {
         const token = window.sessionStorage.token;
         if (token) {
-// Make the get request:
-            var myHeaders = new Headers();
+
+            let myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
             myHeaders.append("Authorization", "Bearer " + token);
             myHeaders.append("Accept", "application/json");
             
-            var requestOptions = {
+            const requestOptions = {
             method: 'GET',
             headers: myHeaders,
             redirect: 'follow'
@@ -45,21 +49,28 @@ class MyPage extends Component {
                 const userUsername = result.userUsername;
                 const authorUsername = result.authorUsername;
                 if (!userUsername===authorUsername) {
-                    this.props.history.push('sign-in');
+                    this.props.history.push('/sign-in');
+                    return;
                 } else if (resultCode === 0) {
                     this.setState({posts:result.posts, postsRetrieved:true, userUsername:result.authorUsername, authorID: resultID, authorPath:"/authors/".concat(resultID)})
                 } else if (resultCode === 1) {
                     this.setState({noPosts:true, userUsername:result.authorUsername})
+                } else if (resultCode === 'expired') {
+                    this.props.history.push('/session-expired');
+                    return;
                 } else {
-                    this.props.history.push('sign-in');
+                    this.props.history.push('/sign-in');
+                    return;
                 }
+                this.setState({loading:false});
             }
             )
             .catch(error => {
-                  
+                this.setState({loading:false});
               });
         } else {
-            this.props.history.push('sign-in');
+            this.props.history.push('/sign-in');
+            return;
         }
     }
 
@@ -67,7 +78,7 @@ class MyPage extends Component {
         const userUsername = this.state.userUsername;
         const authorPath = this.state.authorPath;
         return this.state.posts.map((post, index) => {
-            const { post_id, title, created_timestamp } = post; //destructuring
+            const { post_id, title, created_timestamp } = post;
             const postUrl = "/posts/".concat(post_id);
             return (
                 <tr key={post_id}>
@@ -84,6 +95,14 @@ class MyPage extends Component {
             <>
                 <Navigation guest={false} userUsername={this.state.userUsername} activeKey="/my-page"></Navigation>
                 <Container>
+                {this.state.loading ?
+                    <Row className="h-100 align-content-center">
+                    <Col className="d-flex justify-content-center">
+                    <Spinner animation="border" variant="primary" />
+                    </Col>
+                    </Row>
+                    :
+                    <>
                     <MainPageHeader>
                     {Boolean(this.state.userUsername) &&
                         <>
@@ -95,7 +114,7 @@ class MyPage extends Component {
                     {this.state.noPosts ?
                     <h2>You have no posts yet.</h2>
                     :
-                        <Table bordered hover id='posts'>
+                        <Table bordered hover>
                             <thead>
                             <tr>
                                 <th scope="col">Title</th>
@@ -107,6 +126,7 @@ class MyPage extends Component {
                             {this.state.postsRetrieved && this.renderTablePosts()}
                             </tbody>
                         </Table>}
+                        </>}
                 </Container>
             </>
 		);

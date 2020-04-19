@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Jumbotron } from 'react-bootstrap';
+import Jumbotron from 'react-bootstrap/Jumbotron';
 import Button from 'react-bootstrap/Button';
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
@@ -13,10 +13,11 @@ class ViewAuthorHeader extends Component {
             {Boolean(this.props.guest) ?
                 <Jumbotron>
                     {this.props.children}
+                    <p className="lead">Look over their posts</p>
                     <hr className="my-4"/>
                     <OverlayTrigger key='top' placement='top' overlay=
                 {
-                    <Tooltip id={`tooltip-$sign-in`}>
+                    <Tooltip>
                         You must sign in or register to like authors.
                     </Tooltip>
                 }>
@@ -28,6 +29,7 @@ class ViewAuthorHeader extends Component {
             :
                 <Jumbotron>
                     {this.props.children}
+                    <p className="lead">Look over their posts, or like their page</p>
                     <hr className="my-4"/>
                     <LikeButton initialLiked={this.props.initialLiked} authorID={this.props.authorID} whatToLike='authors'/>
                 </Jumbotron>

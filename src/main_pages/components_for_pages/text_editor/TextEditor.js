@@ -7,7 +7,6 @@ class TextEditor extends Component {
   handleEditorChange = (content, editor) => {
     console.log('Content was updated:', content);
   }
-  // not used?
 
   uploadImages(blobInfo, success, failure) {
     const token = window.sessionStorage.token;
@@ -37,7 +36,11 @@ class TextEditor extends Component {
           success(result.url);
         } else if (resultCode===1) {
           failure(result.message)
-          this.props.history.push('sign-in');       
+          this.props.history.push('/sign-in');       
+          return;
+        } else if (resultCode === 'expired') {
+          this.props.history.push('/session-expired');
+          return;
         } else {
           failure(result.message);
         }
@@ -53,7 +56,7 @@ class TextEditor extends Component {
       <Editor apiKey={tinyAPIKey}
         initialValue={this.props.initialValue}
         init={{
-            height: 500,
+            height: 470,
             menubar: "insert",
             plugins: [
                 'advlist autolink lists link image charmap print preview anchor',
@@ -65,7 +68,6 @@ class TextEditor extends Component {
              alignleft aligncenter alignright alignjustify | 
              bullist numlist outdent indent | removeformat | 
              quickimage media | help`,
-            // images_upload_url: host + '/images',
             automatic_uploads: true,
             images_upload_handler: this.uploadImages,
 

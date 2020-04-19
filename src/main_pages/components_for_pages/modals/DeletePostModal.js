@@ -38,22 +38,18 @@ class DeletePostModal extends Component {
         this.setState({disabled:true});
         
         const token = window.sessionStorage.token;
-        // event.preventDefault();
-        // event.stopPropagation();
         if (token) {
-          // Make the post request:
-          var myHeaders = new Headers();
+          let myHeaders = new Headers();
           myHeaders.append("Content-Type", "application/json");
           myHeaders.append("Authorization", "Bearer " + token);
           myHeaders.append("Accept", "application/json");
           
           
-          var requestOptions = {
+          const requestOptions = {
             method: 'DELETE',
             headers: myHeaders,
             redirect: 'follow'
           };
-          
           fetch(host + this.props.postPath, requestOptions)
             .then(response => response.json())
             .then(result => {
@@ -62,8 +58,13 @@ class DeletePostModal extends Component {
               if (resultCode === 0) {
                 this.close();
                 this.props.history.push('/my-page');
+                return;
+              } else if (resultCode === 'expired') {
+                this.props.history.push('/session-expired');
+                return;
               } else {
-                this.props.history.push('sign-in');
+                this.props.history.push('/sign-in');
+                return;
               }
             }
             )
@@ -72,7 +73,8 @@ class DeletePostModal extends Component {
               });
             
         } else {
-          this.props.history.push('sign-in');
+          this.props.history.push('/sign-in');
+          return;
         }
         this.setState({validated:true});
   }
@@ -86,7 +88,7 @@ render() {
 
 <Modal show={this.state.showModal} onHide={this.close} animation={true} aria-labelledby="contained-modal-title-vcenter" centered>
 <Modal.Header closeButton>
-    <Modal.Title as='h5' id="contained-modal-title-vcenter" style={{margin:"0"}}>Permanently delete this post?</Modal.Title>
+    <Modal.Title as='h5' style={{margin:"0"}}>Permanently delete this post?</Modal.Title>
 </Modal.Header>
 <Modal.Body>This cannot be undone. Are you really sure?</Modal.Body>
 <Modal.Footer>
