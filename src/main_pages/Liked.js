@@ -149,7 +149,7 @@ class Liked extends Component {
                     <Tabs defaultActiveKey="liked-posts">
                     <Tab eventKey="liked-posts" title="Liked Posts">
                     {this.state.noPosts ?
-                    <h2>You have no liked posts.</h2>
+                    <h2 className="mt-3">You have no liked posts.</h2>
                     :
                     <Table bordered hover>
                             <thead>
@@ -166,7 +166,7 @@ class Liked extends Component {
                     </Tab>
                     <Tab eventKey="liked-authors" title="Liked Authors">
                     {this.state.noAuthors ?
-                    <h2>You have no liked authors.</h2>
+                    <h2 className="mt-3">You have no liked authors.</h2>
                     :
                     <ListGroup bordered hover>
                             {this.state.authorsRetrieved && this.renderAuthors()}
