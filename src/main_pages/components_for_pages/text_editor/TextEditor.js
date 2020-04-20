@@ -61,13 +61,15 @@ class TextEditor extends Component {
             plugins: [
                 'advlist autolink lists link image charmap print preview anchor',
                 'searchreplace visualblocks code fullscreen',
-                'insertdatetime media table paste code help wordcount quickbars'
+                'insertdatetime media table paste code help wordcount quickbars',
+                'codesample'
             ],
             toolbar:
             `undo redo | formatselect | bold italic backcolor |
+             fontsizeselect fontselect |
              alignleft aligncenter alignright alignjustify | 
              bullist numlist outdent indent | removeformat | 
-             quickimage media | help`,
+             codesample | quickimage media | help`,
             automatic_uploads: true,
             images_upload_handler: this.uploadImages,
 
